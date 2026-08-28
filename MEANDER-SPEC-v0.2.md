@@ -197,6 +197,12 @@ Per **M-PARETO**, the make-or-break falsifiers are **one experiment at a single 
 
 ## 11 · `meander.lock` — the pinned numbers (pre-registration)
 
+> **Superseded by the real artifact.** The block below is v0.2's paper stake, kept
+> verbatim for the arc. The authoritative lock is [`meander.lock.yaml`](meander.lock.yaml):
+> it carries the pinned floors, an append-only `revisions:` log, and the numbers B0
+> actually **measured** — which contradict the `budget:` priors here by ~3×. See
+> [`FINDINGS-B0.md`](FINDINGS-B0.md). Where the two disagree, the measurement wins.
+
 ```yaml
 version:   { E_model: TODO(GloVe|fastText d=300, sense-disambiguated), E_fp: TODO,
              phi_fp: TODO, R_fp: TODO, valency_fp: TODO, noise_fp: TODO, schema: v0.2 }
@@ -207,7 +213,7 @@ budget:                                                            # §6, priors
   bits_per_proposition_3leg: 75       # prior estimate
   bits_per_magnitude_role:  3         # max meaningful; discrete morphology
   starvation_factor:        5         # payload / capacity, human-legible mode
-  ef d_bits_by_harmonic:    [4,3,2,1,1,"<1"]   # h1..h6 under nominal sigma (prior)
+  efd_bits_by_harmonic:     [4,3,2,1,1,"<1"]   # h1..h6 under nominal sigma (prior)
 floors:                                                            # F-* kill bars (pin real numbers)
   f_metric_forcedchoice_min:   TODO   # absolute; must beat STRONG nulls, not random-phi
   f_collision_max_rate:        TODO   # at (m, N, sigma)

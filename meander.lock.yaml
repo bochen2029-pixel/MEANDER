@@ -1,0 +1,283 @@
+# meander.lock — the pinned numbers. THE single source of every threshold.
+#
+# DISCIPLINE (spec v0.2 §7, §11 / M-PIN):
+#   * Every floor below was pinned BEFORE any phi was trained and BEFORE any
+#     result was looked at. Pre-registration is the whole point. A floor may be
+#     revised ONLY by bumping `schema` and recording the old value + the reason
+#     in `revisions:` below. Silently moving a bar after a peek is the one
+#     unrecoverable sin in this project.
+#   * Every number carries a `provenance` tag. Nothing here is allowed to be a
+#     bare number of unknown origin:
+#         measured            - produced by this harness, reproducible, fp'd
+#         prior               - a v0.2 paper estimate, NOT yet measured
+#         nominal_unmeasured  - a stand-in chosen by fiat; SAFETY-class
+#         pinned_by_fiat      - a threshold set by judgement, pre-registration
+#   * Any law whose input is still `nominal_unmeasured` is DISABLED and must be
+#     reported as disabled, never silently defaulted (see `disabled_laws`).
+
+schema: v0.2-b0
+generated: 2026-08-27
+stake: MEANDER-SPEC-v0.2.md
+
+# ---------------------------------------------------------------- version
+# M-PIN: version = the tuple of fingerprints. Nulls stay null until the
+# artifact exists; the harness refuses to claim a rung whose fp is null.
+version:
+  E_model:      null            # PENDING - see `lexicon:` below
+  E_fp:         null
+  phi_fp:       null            # B1 artifact; does not exist yet
+  R_fp:         null            # B2 artifact
+  valency_fp:   null            # B3 artifact
+  noise_fp:     "nominal-v1"    # defined below, NOT measured from real ink
+  code_fp:      computed_at_run # sha256 over src/meander/*.py, stamped in results
+
+# ---------------------------------------------------------------- lexicon (E)
+lexicon:
+  # v0.2 §2 B1: word embeddings with clean paradigmatic geometry, d=300,
+  # SENSE-DISAMBIGUATED. Static embeddings sense-blend (bank/crane) and that
+  # blend corrupts the F-METRIC test itself, so disambiguation is not optional.
+  intended:
+    model:        "glove.6B.300d"        # or fastText cc.en.300; either is legal
+    dim:          300
+    provenance:   prior
+    status:       NOT_PRESENT_ON_DISK    # blocks a real B1 run; see harness output
+  disambiguation:
+    # v1 strategy: MONOSEMOUS FILTER. Keep only words with exactly one WordNet
+    # synset -> a static vector cannot sense-blend what has only one sense.
+    # Cheaper and stricter than sense-tagging a polysemous corpus; the cost is a
+    # smaller, slightly odd lexicon, which is an honest v1 limit, not a bug.
+    strategy:     monosemous_wordnet
+    provenance:   pinned_by_fiat
+    fallback:     "hand-curated sense-tagged subset if WordNet unavailable"
+  size_target:    500           # "a few hundred" (v0.2 §9 B1)
+  harness_only:
+    # A structured SYNTHETIC space so the harness can be proven to run and the
+    # nulls can be measured with zero network. It is NOT a result. Any number
+    # produced against it is stamped `synthetic: true` and may never be quoted.
+    model:        "synthetic-hierarchical-v1"
+    dim:          300
+    provenance:   nominal_unmeasured
+
+# ---------------------------------------------------------------- noise model
+noise:
+  # v0.2 §11 marks these TODO_measure and SAFETY-class until set. They are STILL
+  # not measured - measuring them needs a real pen and a real scanner. They are
+  # therefore pinned as NOMINAL and every law that consumes them is listed in
+  # `disabled_laws`. The harness sweeps sigma rather than trusting one value.
+  ink_sigma:        0.06        # centreline jitter, in units of stroke width
+  ink_width_sigma:  0.10        # stroke-width jitter, fraction of nominal width
+  scan_sigma:       0.03        # additive Gaussian on [0,1] pixel intensity
+  scan_blur_px:     0.8         # sensor MTF proxy, Gaussian sigma in pixels
+  provenance:       nominal_unmeasured
+  sweep:            [0.25, 0.5, 1.0, 2.0, 4.0]   # multipliers applied to all four
+
+# ---------------------------------------------------------------- render
+render:
+  raster_px:        128         # read resolution
+  stroke_width_px:  2.5
+  contour_points:   256         # polyline samples per closed contour
+  margin:           0.12
+  provenance:       pinned_by_fiat
+
+# ---------------------------------------------------------------- perceptual
+perceptual:
+  # THE HONEST WEAK POINT OF B0. v0.2 §4.1 wants "perceptual contour distance";
+  # v0.1 §4.1 named LPIPS or human triplets. Both need either a network download
+  # or human subjects. What is pinned here is an explicit PROXY: low-pass the
+  # raster at a foveal scale, then L2. It stands in for a human eye and it is
+  # labelled as a stand-in everywhere it is used.
+  metric:           "lowpass_l2_v1"
+  foveal_blur_px:   1.6         # low-pass before comparison (acuity proxy)
+  provenance:       nominal_unmeasured
+  upgrade_path:     "LPIPS (needs weights download) or human 2AFC triplets"
+  jnd:
+    # Just-noticeable-difference: the perceptual distance below which two
+    # rendered glyphs count as COLLIDED. Calibrated by the harness as the
+    # distance produced by pure render noise at nominal sigma (i.e. two
+    # noisy renders of the SAME meaning), at the 95th percentile.
+    calibration:    "p95 of same-meaning noisy-render distance"
+    provenance:     measured
+
+# ---------------------------------------------------------------- bit budget
+budget:
+  # v0.2 §6. The paper numbers are PRIORS. B0's job is to replace the physical
+  # one with a measured one via the actual render -> noise -> re-extract loop.
+  glyph_capacity_bits:        15        # provenance: prior (Miller 14-20; ink-SNR 12-18)
+  bits_per_node_lexicon:      13        # log2(10k); provenance: prior (arithmetic)
+  bits_per_proposition_3leg:  75        # provenance: prior
+  bits_per_magnitude_role:    3         # provenance: prior
+  starvation_factor:          5         # provenance: prior (derived)
+  efd_bits_by_harmonic:       [4, 3, 2, 1, 1, 0.5]   # h1..h6; provenance: prior
+  measured:
+    # provenance: MEASURED 2026-08-27, code_fp stamped in results/*.json.
+    # NOT synthetic-contaminated: the capacity probe samples shape parameters
+    # directly and never touches the lexicon, so these numbers stand whatever E
+    # turns out to be. They are the one part of B0 that is a real result.
+    method: >
+      0.5*log2(var(z)/var(z - E[z|z_hat])), z_hat re-extracted from the noisy
+      render, conditional expectation fitted on the whole received vector so
+      cross-parameter leakage is removed.
+    raster_px: 128
+    at_nominal_sigma:
+      m2:  {free_params: 5,  bits: 3.87, by_harmonic: [3.83, 0.04]}
+      m4:  {free_params: 13, bits: 4.36, by_harmonic: [2.15, 0.03, 2.09, 0.10]}
+      m6:  {free_params: 21, bits: 5.87, by_harmonic: [2.38, 0.07, 1.79, 0.04, 1.48, 0.12]}
+      m8:  {free_params: 29, bits: 6.49, by_harmonic: [2.43, 0.05, 1.84, 0.02, 1.33, 0.02, 0.78, 0.03]}
+    findings:
+      - "MEASURED CAPACITY IS ~4-6.5 BITS, NOT THE ~15 OF THE §6 PRIOR. Even at
+         m=8 with 29 free parameters the glyph carries 6.5 bits. If this holds on
+         a real E it makes the §6 starvation factor WORSE, not better: ~13 bits
+         are needed to index a 10k lexicon."
+      - "THE CHANNEL IS NOT NOISE-LIMITED AT NOMINAL SIGMA. Noise costs 0.15 bits
+         out of a 6.02-bit ceiling at m=6; you must reach 4x nominal sigma before
+         it costs 2.6 bits. The loss is in the CARRIER, not the ink. Raising
+         capacity means changing the shape basis or the decoder, not buying a
+         better pen or a higher-resolution scan."
+      - "EVEN HARMONICS CARRY ALMOST NOTHING (~0.02-0.12 bits per harmonic
+         against 1.3-2.4 for odd ones), consistently across m. Arc-length
+         reparameterisation has period pi for a near-elliptical contour, so it
+         generates odd-harmonic content and scrambles even-harmonic content.
+         Roughly half the EFD parameters are dead weight as a channel."
+      - "HARMONIC 1 IS A FRAME, NOT A PAYLOAD. Under the A7 canonical
+         normalisation a1=1 and b1=c1=0, leaving only d1 free, so m harmonics
+         carry 1+4*(m-1) parameters rather than 4m. The §6 prior credited
+         harmonic 1 with ~4 bits; it measures 2.2-2.4 from its single parameter."
+
+# ---------------------------------------------------------------- shape space
+shape_space:
+  # The legible region, measured. Sampling uniformly in coefficient space yields
+  # SELF-INTERSECTING contours 71% of the time; no amplitude budget alone gets
+  # below ~30%. Cause: with a1 pinned to 1 by the A7 frame, d1 is the minor axis,
+  # so d1 -> 0 collapses the base curve to a segment and any perturbation crosses
+  # it. Bounding d1 away from zero fixes it.
+  d1_range:            [0.25, 0.90]     # provenance: measured
+  harmonic_base:       0.20             # amplitude at h2, decaying 1/n
+  selfcross_rate:                       # provenance: measured
+    m2: 0.00
+    m4: 0.04
+    m6: 0.07
+    m8: 0.16
+  finding: >
+    LEGIBILITY IS A THIRD PARETO AXIS THAT §6 NEVER COSTED. The drawable region
+    is a small awkward subset of coefficient space, it shrinks as m grows, and
+    usable capacity is therefore strictly below the free-parameter count.
+
+# ---------------------------------------------------------------- resolution
+resolution:
+  # The A5 dial. m = retained harmonics. The Pareto frontier is swept over this.
+  m_sweep:          [1, 2, 3, 4, 5, 6, 8, 10]
+  m_operating:      null        # B1 picks ONE; all falsifiers judged at that one
+
+# ---------------------------------------------------------------- FLOORS
+floors:
+  # ===== PINNED 2026-08-27, BEFORE ANY PHI EXISTED. DO NOT MOVE. =====
+  f_metric_forcedchoice_min:      0.75
+  # rationale: 2AFC chance = 0.50. 0.75 is the standard psychophysical threshold
+  # convention for 2AFC (halfway chance->ceiling) and is the weakest bar that can
+  # still be called "a reader can reliably tell which shape is the neighbour".
+  # provenance: pinned_by_fiat
+
+  f_metric_margin_over_best_null: 0.05
+  # rationale: phi must beat the BEST strong null by >= 5 points absolute AND
+  # with non-overlapping 95% bootstrap CIs. Clearing 0.75 while merely tying
+  # PCA-2D is a FAIL: it would mean the learned map bought nothing.
+  # provenance: pinned_by_fiat
+
+  f_metric_precision_at_5_min:    0.40
+  # rationale: retrieval-side check on the same frozen phi. Chance for k=5 over
+  # N=500 is 0.01. 0.40 says a majority-ish of a concept's rendered neighbours
+  # are its true semantic neighbours. provenance: pinned_by_fiat
+
+  f_collision_max_rate:           0.01
+  # rationale: at most 1% of lexicon pairs may fall below the measured JND at the
+  # operating (m, N, sigma). Above that the script cannot carry its own lexicon.
+  # provenance: pinned_by_fiat
+
+  f_roundtrip_min_recovery:       0.90
+  # rationale: top-1 identity recovery through phi -> phi^-1 at the SAME frozen
+  # phi as F-METRIC (v0.2 §7: not deferred to a later rung).
+  # provenance: pinned_by_fiat
+
+  f_degrade_monotone:             required
+  # rationale: r(k) non-increasing in k AND zero category flips at any k.
+  # A single low-k confident-wrong decode kills A5 outright.
+  # provenance: pinned_by_fiat (v0.2 §7)
+
+  f_closure_structural_catch:     0.99    # B3
+  f_closure_roleswap_catch:       0.95    # B3, requires role-parity; A8 gate
+  # provenance: pinned_by_fiat
+
+# ---------------------------------------------------------------- nulls
+nulls:
+  # M-NULL: the null must be STRONG. Beating random-phi proves nothing and is
+  # BANNED as a null (v0.2 retired v0.1's "correlation beats random-phi").
+  required:
+    - roundtrip_only_phi          # same arch, loss 1 only
+    - pca_2d_render               # linear 2-D squash -> shape
+    - discrete_code_matched_bits  # arbitrary codebook at matched capacity
+  added_by_b0:
+    - discrete_semantic_ordered
+    # NOT in the spec's list. It is the honest strongest adversary: quantise E,
+    # then assign codebook shapes by a 1-D spectral ordering of the cluster
+    # centroids, so nearby clusters get nearby shapes. This is "a syllabary that
+    # cheated by sorting its glyphs semantically" - the thing a sceptic will
+    # immediately propose as the cheaper way to get metric-preservation without
+    # any continuity at all. If phi cannot beat it, phi is not earning its keep.
+  optional:
+    - umap_2d_render              # SKIPPED if umap-learn absent; never silent
+  banned:
+    - random_phi                  # M-NULL; a crippled null is a fake floor
+
+# ---------------------------------------------------------------- disabled
+disabled_laws:
+  # Every law whose input is still nominal/unmeasured. Reported, never defaulted.
+  - law: F-COLLISION
+    disabled_by: "noise.provenance == nominal_unmeasured"
+    effect: "collision rate is conditional on a GUESSED sigma; not a real bar yet"
+  - law: F-METRIC (human-legible mode)
+    disabled_by: "perceptual.provenance == nominal_unmeasured"
+    effect: >
+      the lowpass-L2 proxy is not a human eye. Until LPIPS or human triplets
+      land, a PASS licenses only the MACHINE-READABLE claim (v0.2 §8), never
+      the human-legibility claim.
+  - law: ALL (real-E rungs)
+    disabled_by: "lexicon.intended.status == NOT_PRESENT_ON_DISK"
+    effect: "no embeddings on disk; harness runs on synthetic E and stamps synthetic:true"
+
+retracted:
+  - "v0.1 §0 'first continuous writing system / no symbol inventory'"
+  - "v0.1 A8 'never a fabricated certainty'"
+  - "v0.1 A5 'resolution=precision' as free (now nested-loss-conditional)"
+  - "v0.1 F-METRIC 'correlation beats random-phi'"
+
+revisions:      # append-only. [{date, key, old, new, reason, peeked}]
+  - date: 2026-08-27
+    key: falsifiers.DIST_RANK (F-METRIC triple construction)
+    old: [50, 150]
+    new: [4, 12]
+    peeked: synthetic_only
+    reason: >
+      The first implementation drew forced-choice distractors from semantic ranks
+      50-150. Every map scored 0.98-1.00, nulls included, which made the pinned
+      0.75 floor unfalsifiable - a bar nothing can fail is not a bar. This was a
+      DEVIATION FROM THE STAKE rather than a threshold that needed moving: v0.2
+      §7 asks for "confusable NEAR-NEIGHBOUR triples", and rank 50 of 300 is not
+      a near neighbour. The correction brings the code into line with the spec.
+      Disclosure: it was made after seeing results, but only on the SYNTHETIC
+      stand-in space; no real-E number existed, and none has been produced since.
+      The old band is retained as `coarse_acc_diagnostic_only` so the vacuity is
+      visible in every report rather than deleted from the record.
+    no_floor_was_moved: true
+
+  - date: 2026-08-27
+    key: training epochs (default)
+    old: 400
+    new: 3000
+    peeked: synthetic_only
+    reason: >
+      At 400 epochs F-ROUNDTRIP read 0.25-0.34 and looked like capacity
+      starvation. It was undertraining: the same network reaches 0.983 at 1500
+      epochs and 1.000 at 4000. Reporting the 400-epoch number as a structural
+      result would have been a false kill. No floor changed; the compute budget
+      did.
+    no_floor_was_moved: true

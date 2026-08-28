@@ -1,0 +1,341 @@
+{
+  "schema": "v0.2-b0",
+  "rung": "B0",
+  "generated": "2026-08-27T23:06:13",
+  "code_fp": "f7bb4f29220a55ca",
+  "m": 4,
+  "n_free_params": 13,
+  "lexicon": {
+    "source": "synthetic-hierarchical-v1",
+    "n": 300,
+    "dim": 300,
+    "synthetic": true,
+    "disambiguation": "n/a (synthetic points are monosemous by construction)",
+    "notes": [
+      "HARNESS-ONLY: not E. No number from this space is a MEANDER result.",
+      "No embedding file found in ./data - looked for: glove.6B.300d.txt, crawl-300d-2M.vec, cc.en.300.vec"
+    ]
+  },
+  "SYNTHETIC_NOT_A_RESULT": true,
+  "jnd": 0.020704171899706122,
+  "capacity": {
+    "ok": true,
+    "m": 4,
+    "n_free_params": 13,
+    "bits_per_param": [
+      2.1514708468875394,
+      0.0,
+      0.017503342253401652,
+      0.0,
+      0.008673235163025223,
+      0.25912130186685756,
+      0.2727711736394516,
+      0.8000976014503021,
+      0.753868389651454,
+      0.006278624166037431,
+      0.04106837775899656,
+      0.03845946126550019,
+      0.015016381776598184
+    ],
+    "total_bits": 4.364328735879163,
+    "bits_per_param_noiseless": [
+      2.1479126627685092,
+      0.0028266203458124977,
+      0.0051615834003408195,
+      0.046596967218163754,
+      0.0,
+      0.2674173670246061,
+      0.2630799396295892,
+      0.7854509212140105,
+      0.7572194833871689,
+      0.004848122750982714,
+      0.06868594011050504,
+      0.054817890741800324,
+      0.0054990209661405385
+    ],
+    "total_bits_noiseless": 4.40951651955763,
+    "lost_to_noise_bits": 0.04518778367846643,
+    "n_samples_used": 157,
+    "n_lost": 0,
+    "n_selfcross": 3,
+    "selfcross_rate": 0.01875,
+    "estimator": "0.5*log2(var(z) / var(z - E[z|z_hat])), the conditional expectation being a least-squares fit on the whole received vector, so cross-parameter leakage is removed",
+    "caveat": "UPPER BOUND: re-extracted from the filled silhouette, so it excludes the stroked-glyph medial-axis recovery problem (B5), and the estimator is linear-Gaussian, so any nonlinear recoverability is not counted.",
+    "bits_by_harmonic": [
+      2.1514708468875394,
+      0.026176577416426875,
+      2.085858466608065,
+      0.10082284496713237
+    ]
+  },
+  "floors": {
+    "f_metric_forcedchoice_min": 0.75,
+    "f_metric_margin_over_best_null": 0.05,
+    "f_metric_precision_at_5_min": 0.4,
+    "f_collision_max_rate": 0.01,
+    "f_roundtrip_min_recovery": 0.9,
+    "f_degrade_monotone": "required",
+    "f_closure_structural_catch": 0.99,
+    "f_closure_roleswap_catch": 0.95
+  },
+  "disabled_laws": [
+    {
+      "law": "F-COLLISION",
+      "disabled_by": "noise.provenance == nominal_unmeasured",
+      "effect": "collision rate is conditional on a GUESSED sigma; not a real bar yet"
+    },
+    {
+      "law": "F-METRIC (human-legible mode)",
+      "disabled_by": "perceptual.provenance == nominal_unmeasured",
+      "effect": "the lowpass-L2 proxy is not a human eye. Until LPIPS or human triplets land, a PASS licenses only the MACHINE-READABLE claim (v0.2 \u00a78), never the human-legibility claim.\n"
+    },
+    {
+      "law": "ALL (real-E rungs)",
+      "disabled_by": "lexicon.intended.status == NOT_PRESENT_ON_DISK",
+      "effect": "no embeddings on disk; harness runs on synthetic E and stamps synthetic:true"
+    }
+  ],
+  "maps": [
+    {
+      "name": "phi_learned",
+      "kind": "candidate",
+      "skipped": false,
+      "note": "",
+      "n_codes": null,
+      "simple_contour_rate": 1.0,
+      "f_metric": {
+        "forced_choice_acc": 0.9208333333333333,
+        "ci95": [
+          0.91,
+          0.9320833333333334
+        ],
+        "precision_at_5": 0.7286666666666666,
+        "n_triples": 2400,
+        "coarse_acc_diagnostic_only": 1.0
+      },
+      "f_collision": {
+        "rate": 0.0001560758082497213,
+        "jnd": 0.020704171899706122,
+        "n_pairs": 44850,
+        "min_distance": 0.01674642786383629
+      },
+      "f_roundtrip": {
+        "top1": 1.0
+      },
+      "f_degrade": {
+        "radii": {
+          "1": 0.17512547969818115,
+          "2": 0.04249497875571251,
+          "3": 0.023160630837082863,
+          "4": 0.009116520173847675
+        },
+        "flips": {
+          "1": 0.9533333333333334,
+          "2": 0.6033333333333334,
+          "3": 0.13333333333333333,
+          "4": 0.0
+        },
+        "monotone": true,
+        "worst_flip_rate": 0.9533333333333334,
+        "pass": false
+      },
+      "seconds": 66.4,
+      "train_history": {
+        "roundtrip": 0.00896513368934393,
+        "continuity": 0.012392878532409668,
+        "separation": 0.26664426922798157,
+        "nested": 0.0772109255194664,
+        "total": 0.19328561425209045,
+        "epoch": 2999
+      }
+    },
+    {
+      "name": "roundtrip_only_phi",
+      "kind": "null",
+      "skipped": false,
+      "note": "",
+      "n_codes": null,
+      "simple_contour_rate": 1.0,
+      "f_metric": {
+        "forced_choice_acc": 0.8729166666666667,
+        "ci95": [
+          0.8591666666666666,
+          0.8858333333333334
+        ],
+        "precision_at_5": 0.6666666666666665,
+        "n_triples": 2400,
+        "coarse_acc_diagnostic_only": 0.9566666666666667
+      },
+      "f_collision": {
+        "rate": 0.0,
+        "jnd": 0.020704171899706122,
+        "n_pairs": 44850,
+        "min_distance": 0.021373271942138672
+      },
+      "f_roundtrip": {
+        "top1": 1.0
+      },
+      "f_degrade": {
+        "radii": {
+          "1": 0.8967744708061218,
+          "2": 0.7191932201385498,
+          "3": 0.44205358624458313,
+          "4": 4.820585309062153e-05
+        },
+        "flips": {
+          "1": 0.9966666666666667,
+          "2": 0.94,
+          "3": 0.5233333333333333,
+          "4": 0.0
+        },
+        "monotone": true,
+        "worst_flip_rate": 0.9966666666666667,
+        "pass": false
+      },
+      "seconds": 32.4,
+      "train_history": {
+        "roundtrip": 6.377184763550758e-05,
+        "total": 6.377184763550758e-05,
+        "epoch": 2999
+      }
+    },
+    {
+      "name": "pca_2d_render",
+      "kind": "null",
+      "skipped": false,
+      "note": "",
+      "n_codes": null,
+      "simple_contour_rate": 1.0,
+      "f_metric": {
+        "forced_choice_acc": 0.74375,
+        "ci95": [
+          0.7258333333333333,
+          0.7608333333333334
+        ],
+        "precision_at_5": 0.3846666666666667,
+        "n_triples": 2400,
+        "coarse_acc_diagnostic_only": 0.9883333333333333
+      },
+      "f_collision": {
+        "rate": 0.025663322185061316,
+        "jnd": 0.020704171899706122,
+        "n_pairs": 44850,
+        "min_distance": 0.009714167565107346
+      },
+      "f_roundtrip": {
+        "top1": null,
+        "note": "map has no inverse (structural, not a failure)"
+      },
+      "f_degrade": null,
+      "seconds": 6.2
+    },
+    {
+      "name": "umap_2d_render",
+      "kind": "null",
+      "skipped": true,
+      "note": "SKIPPED - umap-learn not installed (ModuleNotFoundError). Listed in meander.lock as optional; recorded as skipped, never silently dropped."
+    },
+    {
+      "name": "discrete_code_matched_bits",
+      "kind": "null",
+      "skipped": false,
+      "note": "",
+      "n_codes": 20,
+      "simple_contour_rate": 0.921875,
+      "f_metric": {
+        "forced_choice_acc": 0.6195833333333334,
+        "ci95": [
+          0.6,
+          0.63875
+        ],
+        "precision_at_5": 0.322,
+        "n_triples": 2400,
+        "coarse_acc_diagnostic_only": 1.0
+      },
+      "f_collision": {
+        "rate": 0.05117056856187291,
+        "jnd": 0.020704171899706122,
+        "n_pairs": 44850,
+        "min_distance": 0.008603685535490513
+      },
+      "f_roundtrip": {
+        "top1": 0.06666666666666667
+      },
+      "f_degrade": {
+        "radii": {
+          "1": 0.8085129857063293,
+          "2": 0.2093539535999298,
+          "3": 0.2093539535999298,
+          "4": 0.2093539535999298
+        },
+        "flips": {
+          "1": 0.7666666666666667,
+          "2": 0.0,
+          "3": 0.0,
+          "4": 0.0
+        },
+        "monotone": true,
+        "worst_flip_rate": 0.7666666666666667,
+        "pass": false
+      },
+      "seconds": 6.4
+    },
+    {
+      "name": "discrete_semantic_ordered",
+      "kind": "null",
+      "skipped": false,
+      "note": "",
+      "n_codes": 20,
+      "simple_contour_rate": 1.0,
+      "f_metric": {
+        "forced_choice_acc": 0.61875,
+        "ci95": [
+          0.5991666666666666,
+          0.6375
+        ],
+        "precision_at_5": 0.29133333333333333,
+        "n_triples": 2400,
+        "coarse_acc_diagnostic_only": 1.0
+      },
+      "f_collision": {
+        "rate": 0.05623188405797101,
+        "jnd": 0.020704171899706122,
+        "n_pairs": 44850,
+        "min_distance": 0.00816437415778637
+      },
+      "f_roundtrip": {
+        "top1": 0.06666666666666667
+      },
+      "f_degrade": {
+        "radii": {
+          "1": 0.7888237237930298,
+          "2": 0.2953023314476013,
+          "3": 0.25863566994667053,
+          "4": 0.2093539535999298
+        },
+        "flips": {
+          "1": 0.7833333333333333,
+          "2": 0.1,
+          "3": 0.11666666666666667,
+          "4": 0.0
+        },
+        "monotone": true,
+        "worst_flip_rate": 0.7833333333333333,
+        "pass": false
+      },
+      "seconds": 4.6
+    }
+  ],
+  "verdict": {
+    "rung": "B0",
+    "b1_claim_licensed": false,
+    "candidate_2afc": 0.9208333333333333,
+    "best_null": "roundtrip_only_phi",
+    "best_null_2afc": 0.8729166666666667,
+    "margin": 0.04791666666666661,
+    "ci_disjoint": true,
+    "clears_absolute_floor": true,
+    "clears_margin": false
+  },
+  "seconds": 122.7
+}
