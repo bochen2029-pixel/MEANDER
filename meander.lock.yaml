@@ -303,6 +303,24 @@ preregistrations:
         the falsifier for the very thing the falsifier exists to protect. Pinned
         before any m>10 result exists. 0.95 is just below the 0.984 the current
         best config achieves, so it demands no regression and permits no collapse.
+    rider_declared_before_result:
+      id: B1-EXT-1-HOLDOUT
+      condition: >
+        A RESCUE from B1-EXT-1 DOES NOT license a pass claim on its own. Every
+        result in this project so far is IN-SAMPLE: phi is trained on all 500
+        words and F-METRIC is then measured on those same 500. v0.1 §7 asked for
+        held-out concepts and this implementation never did it. phi has far more
+        capacity to fit than PCA or UMAP, so the comparison is biased in phi's
+        favour - which is why it does not weaken a FAIL (phi loses despite the
+        advantage) but would make a PASS unsafe.
+      requirement: >
+        If B1-EXT-1 returns RESCUE, re-run the winning configuration with phi and
+        every null fitted on a 400-word train split and F-METRIC measured on the
+        100 held-out words, at the same unchanged bars. Only the held-out number
+        may be quoted as a pass.
+      declared: 2026-08-28
+      declared_before_seeing: B1-EXT-1 results
+
     outcome: PENDING
 
 revisions:      # append-only. [{date, key, old, new, reason, peeked}]
