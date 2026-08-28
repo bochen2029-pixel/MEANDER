@@ -1,10 +1,10 @@
 {
   "schema": "v0.2-b0",
   "rung": "B0",
-  "generated": "2026-08-27T23:39:10",
+  "generated": "2026-08-27T23:51:50",
   "code_fp": "9273e05328234841",
-  "m": 4,
-  "n_free_params": 13,
+  "m": 10,
+  "n_free_params": 37,
   "lexicon": {
     "source": "glove.6B.300d.txt",
     "n": 500,
@@ -17,7 +17,7 @@
     ]
   },
   "SYNTHETIC_NOT_A_RESULT": false,
-  "jnd": 0.020704171899706122,
+  "jnd": 0.021518050599843262,
   "triple_difficulty": {
     "mean_positive_distance": 0.5808634161949158,
     "mean_distractor_distance": 0.7258448600769043,
@@ -27,52 +27,106 @@
   },
   "capacity": {
     "ok": true,
-    "m": 4,
-    "n_free_params": 13,
+    "m": 10,
+    "n_free_params": 37,
     "bits_per_param": [
-      2.1514708468875394,
+      2.2760824340447017,
       0.0,
-      0.017503342253401652,
       0.0,
-      0.008673235163025223,
-      0.25912130186685756,
-      0.2727711736394516,
-      0.8000976014503021,
-      0.753868389651454,
-      0.006278624166037431,
-      0.04106837775899656,
-      0.03845946126550019,
-      0.015016381776598184
+      0.01437341616420477,
+      0.0,
+      0.2784877304123782,
+      0.29177740432768606,
+      0.6988472503260474,
+      0.5170004651834758,
+      0.0,
+      0.0,
+      0.0,
+      0.0338371346803481,
+      0.185925928103033,
+      0.1810407903045419,
+      0.48989653373591574,
+      0.3990739263171359,
+      0.16870523585523764,
+      0.04262853461562109,
+      0.00841134228103227,
+      0.14966604406585304,
+      0.27757977243444115,
+      0.15377695403455682,
+      0.1931352371556569,
+      0.4050718053540768,
+      0.0,
+      0.03094395633966547,
+      0.0,
+      0.00984016266383334,
+      0.00027381962016267985,
+      0.02077086811665795,
+      0.1732837733263827,
+      0.1512595561772611,
+      0.012555769227331178,
+      0.0,
+      0.04670690180859287,
+      0.06777259607484316
     ],
-    "total_bits": 4.364328735879163,
+    "total_bits": 7.2787253427506755,
     "bits_per_param_noiseless": [
-      2.1479126627685092,
-      0.0028266203458124977,
-      0.0051615834003408195,
-      0.046596967218163754,
+      2.3307107376508296,
+      0.005175664619156417,
       0.0,
-      0.2674173670246061,
-      0.2630799396295892,
-      0.7854509212140105,
-      0.7572194833871689,
-      0.004848122750982714,
-      0.06868594011050504,
-      0.054817890741800324,
-      0.0054990209661405385
+      0.0,
+      0.0042958820416386405,
+      0.2562249366594139,
+      0.3159640849104844,
+      0.7128726190839725,
+      0.5201142023876665,
+      0.07445200594131769,
+      0.11295803372020545,
+      0.0,
+      0.0,
+      0.28981064708753235,
+      0.2894810320218376,
+      0.47379451284382984,
+      0.40670751830930674,
+      0.06336220591763594,
+      0.05016399558410487,
+      0.006932127031882478,
+      0.03679933371175672,
+      0.22599672274283858,
+      0.15132376980732332,
+      0.29318592747926314,
+      0.412535082571719,
+      0.02384412460881764,
+      0.0,
+      0.0,
+      0.06012122644526725,
+      0.10382762878001119,
+      0.0,
+      0.23438587894548743,
+      0.05150124845298125,
+      0.021345265747916727,
+      0.0,
+      0.0018160767566403628,
+      0.0
     ],
-    "total_bits_noiseless": 4.40951651955763,
-    "lost_to_noise_bits": 0.04518778367846643,
-    "n_samples_used": 157,
+    "total_bits_noiseless": 7.529702491860836,
+    "lost_to_noise_bits": 0.25097714911016045,
+    "n_samples_used": 120,
     "n_lost": 0,
-    "n_selfcross": 3,
-    "selfcross_rate": 0.01875,
+    "n_selfcross": 40,
+    "selfcross_rate": 0.25,
     "estimator": "0.5*log2(var(z) / var(z - E[z|z_hat])), the conditional expectation being a least-squares fit on the whole received vector, so cross-parameter leakage is removed",
     "caveat": "UPPER BOUND: re-extracted from the filled silhouette, so it excludes the stroked-glyph medial-axis recovery problem (B5), and the estimator is linear-Gaussian, so any nonlinear recoverability is not counted.",
     "bits_by_harmonic": [
-      2.1514708468875394,
-      0.026176577416426875,
-      2.085858466608065,
-      0.10082284496713237
+      2.2760824340447017,
+      0.01437341616420477,
+      1.7861128502495873,
+      0.0338371346803481,
+      1.2559371784606266,
+      0.36941115681774406,
+      1.0295637689787316,
+      0.04078411900349881,
+      0.34558801724046445,
+      0.1270352671107672
     ]
   },
   "floors": {
@@ -144,46 +198,64 @@
       "skipped": false,
       "note": "",
       "n_codes": null,
-      "simple_contour_rate": 1.0,
+      "simple_contour_rate": 0.796875,
       "f_metric": {
-        "forced_choice_acc": 0.72875,
+        "forced_choice_acc": 0.71675,
         "ci95": [
-          0.71474375,
-          0.74275
+          0.70274375,
+          0.7302562499999999
         ],
-        "precision_at_5": 0.358,
+        "precision_at_5": 0.3416,
         "n_triples": 4000,
-        "coarse_acc_diagnostic_only": 0.929
+        "coarse_acc_diagnostic_only": 0.928
       },
       "f_collision": {
-        "rate": 1.6032064128256513e-05,
-        "jnd": 0.020704171899706122,
+        "rate": 0.0,
+        "jnd": 0.021518050599843262,
         "n_pairs": 124750,
-        "min_distance": 0.01823318749666214
+        "min_distance": 0.02576507441699505
       },
       "f_roundtrip": {
-        "top1": 0.998
+        "top1": 1.0
       },
       "f_degrade": {
         "radii": {
-          "1": 0.7506251931190491,
-          "2": 0.31778714060783386,
-          "3": 0.07428727298974991,
-          "4": 0.010438953526318073
+          "1": 0.7660276889801025,
+          "2": 0.4640903174877167,
+          "3": 0.2162884771823883,
+          "4": 0.09225926548242569,
+          "5": 0.04146848991513252,
+          "6": 0.020148685202002525,
+          "7": 0.0107430974021554,
+          "8": 0.006448164116591215,
+          "9": 0.0046211048029363155,
+          "10": 0.0039038376417011023
         },
         "flips": {
-          "1": 0.992,
-          "2": 0.22,
-          "3": 0.002,
-          "4": 0.0
+          "1": 0.996,
+          "2": 0.598,
+          "3": 0.048,
+          "4": 0.002,
+          "5": 0.002,
+          "6": 0.0,
+          "7": 0.0,
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0
         },
         "monotone_radii": true,
-        "worst_flip_rate": 0.992,
+        "worst_flip_rate": 0.996,
         "mean_true_rank": {
-          "1": 108.4,
-          "2": 1.422,
-          "3": 1.004,
-          "4": 1.004
+          "1": 119.472,
+          "2": 5.286,
+          "3": 1.052,
+          "4": 1.004,
+          "5": 1.004,
+          "6": 1.0,
+          "7": 1.0,
+          "8": 1.0,
+          "9": 1.0,
+          "10": 1.0
         },
         "neighbourhood_bound": 25.0,
         "monotone_rank": true,
@@ -191,13 +263,13 @@
         "pass": false,
         "criterion": "radii and true-concept rank both monotone in k, and the true concept never leaves the top 5% of the lexicon = vagueness, not error"
       },
-      "seconds": 71.8,
+      "seconds": 145.3,
       "train_history": {
-        "roundtrip": 0.011058149859309196,
-        "continuity": 0.17365705966949463,
-        "separation": 0.21400347352027893,
-        "nested": 0.37835708260536194,
-        "total": 0.480895459651947,
+        "roundtrip": 0.003870055079460144,
+        "continuity": 0.06636738777160645,
+        "separation": 0.19968096911907196,
+        "nested": 0.18072162568569183,
+        "total": 0.2604387402534485,
         "epoch": 2999
       }
     },
@@ -207,46 +279,64 @@
       "skipped": false,
       "note": "",
       "n_codes": null,
-      "simple_contour_rate": 0.90625,
+      "simple_contour_rate": 0.40625,
       "f_metric": {
-        "forced_choice_acc": 0.64925,
+        "forced_choice_acc": 0.6255,
         "ci95": [
-          0.63424375,
-          0.66325625
+          0.60975,
+          0.64075
         ],
-        "precision_at_5": 0.19920000000000002,
+        "precision_at_5": 0.18720000000000003,
         "n_triples": 4000,
-        "coarse_acc_diagnostic_only": 0.7585
+        "coarse_acc_diagnostic_only": 0.742
       },
       "f_collision": {
-        "rate": 8.016032064128256e-06,
-        "jnd": 0.020704171899706122,
+        "rate": 0.0,
+        "jnd": 0.021518050599843262,
         "n_pairs": 124750,
-        "min_distance": 0.019515205174684525
+        "min_distance": 0.026316329836845398
       },
       "f_roundtrip": {
-        "top1": 0.998
+        "top1": 1.0
       },
       "f_degrade": {
         "radii": {
-          "1": 0.9529890418052673,
-          "2": 0.7929663062095642,
-          "3": 0.5337926149368286,
-          "4": 0.0013320795260369778
+          "1": 0.923617422580719,
+          "2": 0.8365663886070251,
+          "3": 0.7445783615112305,
+          "4": 0.6540527939796448,
+          "5": 0.5397742390632629,
+          "6": 0.4348072111606598,
+          "7": 0.3327447474002838,
+          "8": 0.22737301886081696,
+          "9": 0.11679715663194656,
+          "10": 0.001351053942926228
         },
         "flips": {
-          "1": 0.994,
-          "2": 0.898,
-          "3": 0.37,
-          "4": 0.0
+          "1": 0.996,
+          "2": 0.964,
+          "3": 0.864,
+          "4": 0.602,
+          "5": 0.246,
+          "6": 0.056,
+          "7": 0.014,
+          "8": 0.004,
+          "9": 0.002,
+          "10": 0.0
         },
         "monotone_radii": true,
-        "worst_flip_rate": 0.994,
+        "worst_flip_rate": 0.996,
         "mean_true_rank": {
-          "1": 199.874,
-          "2": 45.24,
-          "3": 3.198,
-          "4": 1.002
+          "1": 203.086,
+          "2": 78.474,
+          "3": 22.44,
+          "4": 6.592,
+          "5": 1.624,
+          "6": 1.072,
+          "7": 1.014,
+          "8": 1.006,
+          "9": 1.002,
+          "10": 1.0
         },
         "neighbourhood_bound": 25.0,
         "monotone_rank": true,
@@ -254,10 +344,10 @@
         "pass": false,
         "criterion": "radii and true-concept rank both monotone in k, and the true concept never leaves the top 5% of the lexicon = vagueness, not error"
       },
-      "seconds": 37.7,
+      "seconds": 43.3,
       "train_history": {
-        "roundtrip": 0.0012552887201309204,
-        "total": 0.0012552887201309204,
+        "roundtrip": 0.0014459178782999516,
+        "total": 0.0014459178782999516,
         "epoch": 2999
       }
     },
@@ -267,29 +357,29 @@
       "skipped": false,
       "note": "",
       "n_codes": null,
-      "simple_contour_rate": 1.0,
+      "simple_contour_rate": 0.609375,
       "f_metric": {
-        "forced_choice_acc": 0.555,
+        "forced_choice_acc": 0.56475,
         "ci95": [
-          0.53925,
-          0.5705
+          0.54924375,
+          0.58025
         ],
-        "precision_at_5": 0.05840000000000001,
+        "precision_at_5": 0.06,
         "n_triples": 4000,
-        "coarse_acc_diagnostic_only": 0.73025
+        "coarse_acc_diagnostic_only": 0.7365
       },
       "f_collision": {
-        "rate": 0.0046733466933867734,
-        "jnd": 0.020704171899706122,
+        "rate": 0.0030220440881763527,
+        "jnd": 0.021518050599843262,
         "n_pairs": 124750,
-        "min_distance": 0.009265686385333538
+        "min_distance": 0.01005165372043848
       },
       "f_roundtrip": {
         "top1": null,
         "note": "map has no inverse (structural, not a failure)"
       },
       "f_degrade": null,
-      "seconds": 9.0
+      "seconds": 8.9
     },
     {
       "name": "umap_2d_render",
@@ -297,76 +387,94 @@
       "skipped": false,
       "note": "",
       "n_codes": null,
-      "simple_contour_rate": 1.0,
+      "simple_contour_rate": 0.625,
       "f_metric": {
-        "forced_choice_acc": 0.7175,
+        "forced_choice_acc": 0.715,
         "ci95": [
-          0.70325,
-          0.73150625
+          0.7015,
+          0.729
         ],
-        "precision_at_5": 0.32520000000000004,
+        "precision_at_5": 0.33320000000000005,
         "n_triples": 4000,
-        "coarse_acc_diagnostic_only": 0.9075
+        "coarse_acc_diagnostic_only": 0.90025
       },
       "f_collision": {
-        "rate": 0.006805611222444889,
-        "jnd": 0.020704171899706122,
+        "rate": 0.004993987975951904,
+        "jnd": 0.021518050599843262,
         "n_pairs": 124750,
-        "min_distance": 0.009597361087799072
+        "min_distance": 0.009653440676629543
       },
       "f_roundtrip": {
         "top1": null,
         "note": "map has no inverse (structural, not a failure)"
       },
       "f_degrade": null,
-      "seconds": 10.1
+      "seconds": 9.2
     },
     {
       "name": "discrete_code_matched_bits",
       "kind": "null",
       "skipped": false,
       "note": "",
-      "n_codes": 20,
-      "simple_contour_rate": 0.953125,
+      "n_codes": 155,
+      "simple_contour_rate": 0.78125,
       "f_metric": {
-        "forced_choice_acc": 0.5945,
+        "forced_choice_acc": 0.6995,
         "ci95": [
-          0.57975,
-          0.61
+          0.6849937500000001,
+          0.71375
         ],
-        "precision_at_5": 0.10479999999999999,
+        "precision_at_5": 0.3516,
         "n_triples": 4000,
-        "coarse_acc_diagnostic_only": 0.74175
+        "coarse_acc_diagnostic_only": 0.737
       },
       "f_collision": {
-        "rate": 0.04640480961923848,
-        "jnd": 0.020704171899706122,
+        "rate": 0.005386773547094189,
+        "jnd": 0.021518050599843262,
         "n_pairs": 124750,
-        "min_distance": 0.007665085140615702
+        "min_distance": 0.009152108803391457
       },
       "f_roundtrip": {
-        "top1": 0.04
+        "top1": 0.308
       },
       "f_degrade": {
         "radii": {
-          "1": 0.9334024786949158,
-          "2": 0.8127908706665039,
-          "3": 0.8127908706665039,
-          "4": 0.8127908706665039
+          "1": 0.9438022971153259,
+          "2": 0.5335441827774048,
+          "3": 0.43571919202804565,
+          "4": 0.43571919202804565,
+          "5": 0.43571919202804565,
+          "6": 0.43571919202804565,
+          "7": 0.43571919202804565,
+          "8": 0.43571919202804565,
+          "9": 0.43571919202804565,
+          "10": 0.43571919202804565
         },
         "flips": {
-          "1": 0.672,
-          "2": 0.0,
+          "1": 0.932,
+          "2": 0.192,
           "3": 0.0,
-          "4": 0.0
+          "4": 0.0,
+          "5": 0.0,
+          "6": 0.0,
+          "7": 0.0,
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0
         },
         "monotone_radii": true,
-        "worst_flip_rate": 0.672,
+        "worst_flip_rate": 0.932,
         "mean_true_rank": {
-          "1": 184.382,
-          "2": 17.642,
-          "3": 17.642,
-          "4": 17.642
+          "1": 232.514,
+          "2": 50.196,
+          "3": 2.514,
+          "4": 2.514,
+          "5": 2.514,
+          "6": 2.514,
+          "7": 2.514,
+          "8": 2.514,
+          "9": 2.514,
+          "10": 2.514
         },
         "neighbourhood_bound": 25.0,
         "monotone_rank": true,
@@ -374,74 +482,92 @@
         "pass": false,
         "criterion": "radii and true-concept rank both monotone in k, and the true concept never leaves the top 5% of the lexicon = vagueness, not error"
       },
-      "seconds": 10.0
+      "seconds": 9.3
     },
     {
       "name": "discrete_semantic_ordered",
       "kind": "null",
       "skipped": false,
       "note": "",
-      "n_codes": 20,
+      "n_codes": 155,
       "simple_contour_rate": 1.0,
       "f_metric": {
-        "forced_choice_acc": 0.60025,
+        "forced_choice_acc": 0.70675,
         "ci95": [
-          0.5855,
-          0.61575
+          0.6929875,
+          0.72125
         ],
-        "precision_at_5": 0.0952,
+        "precision_at_5": 0.264,
         "n_triples": 4000,
-        "coarse_acc_diagnostic_only": 0.76025
+        "coarse_acc_diagnostic_only": 0.80025
       },
       "f_collision": {
-        "rate": 0.05320240480961924,
-        "jnd": 0.020704171899706122,
+        "rate": 0.019519038076152306,
+        "jnd": 0.021518050599843262,
         "n_pairs": 124750,
-        "min_distance": 0.00790201686322689
+        "min_distance": 0.009412235580384731
       },
       "f_roundtrip": {
-        "top1": 0.04
+        "top1": 0.308
       },
       "f_degrade": {
         "radii": {
-          "1": 0.9539647102355957,
-          "2": 0.8498302102088928,
-          "3": 0.8335369229316711,
-          "4": 0.8127908706665039
+          "1": 0.9344063997268677,
+          "2": 0.7603577971458435,
+          "3": 0.6068257093429565,
+          "4": 0.5563093423843384,
+          "5": 0.602824866771698,
+          "6": 0.49172404408454895,
+          "7": 0.45741721987724304,
+          "8": 0.43784788250923157,
+          "9": 0.43784788250923157,
+          "10": 0.43571919202804565
         },
         "flips": {
-          "1": 0.754,
-          "2": 0.2,
-          "3": 0.09,
-          "4": 0.0
+          "1": 0.93,
+          "2": 0.614,
+          "3": 0.346,
+          "4": 0.26,
+          "5": 0.338,
+          "6": 0.122,
+          "7": 0.042,
+          "8": 0.002,
+          "9": 0.002,
+          "10": 0.0
         },
-        "monotone_radii": true,
-        "worst_flip_rate": 0.754,
+        "monotone_radii": false,
+        "worst_flip_rate": 0.93,
         "mean_true_rank": {
-          "1": 226.552,
-          "2": 73.418,
-          "3": 37.298,
-          "4": 17.642
+          "1": 213.042,
+          "2": 130.25,
+          "3": 58.02,
+          "4": 43.292,
+          "5": 61.642,
+          "6": 15.076,
+          "7": 4.778,
+          "8": 3.376,
+          "9": 3.376,
+          "10": 2.514
         },
         "neighbourhood_bound": 25.0,
-        "monotone_rank": true,
+        "monotone_rank": false,
         "stays_in_neighbourhood": false,
         "pass": false,
         "criterion": "radii and true-concept rank both monotone in k, and the true concept never leaves the top 5% of the lexicon = vagueness, not error"
       },
-      "seconds": 9.8
+      "seconds": 10.6
     }
   ],
   "verdict": {
     "rung": "B0",
     "b1_claim_licensed": false,
-    "candidate_2afc": 0.72875,
+    "candidate_2afc": 0.71675,
     "best_null": "umap_2d_render",
-    "best_null_2afc": 0.7175,
-    "margin": 0.011249999999999982,
+    "best_null_2afc": 0.715,
+    "margin": 0.0017500000000000293,
     "ci_disjoint": false,
     "clears_absolute_floor": false,
     "clears_margin": false
   },
-  "seconds": 156.4
+  "seconds": 237.1
 }
