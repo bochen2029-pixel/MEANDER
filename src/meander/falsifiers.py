@@ -97,6 +97,26 @@ def f_metric(perc: np.ndarray, sem: np.ndarray, triples: np.ndarray, k: int = 5,
             "n_triples": int(len(triples)), "coarse_acc_diagnostic_only": coarse}
 
 
+def triple_difficulty(sem: np.ndarray, triples: np.ndarray) -> dict:
+    """How far apart ARE the two candidates, semantically?
+
+    Without this the forced-choice number is uninterpretable in both directions.
+    A band gap near zero means the two candidates are effectively equidistant in
+    meaning, so even a perfect map scores near chance and a wall of failures says
+    nothing about phi. A huge gap means the opposite -- the first implementation
+    of this test drew distractors so far away that every map scored 0.98-1.00.
+    Report the gap next to the score, always.
+    """
+    a, p, d = triples[:, 0], triples[:, 1], triples[:, 2]
+    d_pos, d_dist = sem[a, p], sem[a, d]
+    gap = d_dist - d_pos
+    return {"mean_positive_distance": float(d_pos.mean()),
+            "mean_distractor_distance": float(d_dist.mean()),
+            "mean_gap": float(gap.mean()),
+            "gap_over_positive_distance": float(gap.mean() / max(d_pos.mean(), 1e-9)),
+            "frac_gap_negative": float(np.mean(gap <= 0))}
+
+
 # --------------------------------------------------------------- F-ROUNDTRIP
 
 def f_roundtrip(decoded: np.ndarray | None, vectors: np.ndarray):

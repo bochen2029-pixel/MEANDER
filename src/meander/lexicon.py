@@ -97,16 +97,49 @@ def load_synthetic(n_groups=20, n_sub=5, n_items=5, dim=300, seed=1729,
 # --------------------------------------------------------------- real
 
 def _monosemous_filter(words: list[str]) -> tuple[list[str], str]:
-    """Keep words with exactly one WordNet synset. Returns (kept, note)."""
+    """Keep monosemous COMMON NOUNS. Returns (kept, note).
+
+    Three conditions, and the second and third are not fussiness:
+
+      exactly one synset   a static vector cannot sense-blend what has one sense
+      part of speech = n   'within', 'sometimes', 'mainly', 'non' are monosemous
+                           and are not concepts; their geometry encodes syntactic
+                           distribution, and asking phi to render them as shapes
+                           tests a paradigmatic structure they do not have
+      not an instance      'italy', 'michael', 'malaysia', 'nigeria' each have
+                           exactly one synset and would sail through a naive
+                           filter. A first pass produced a 500-word lexicon
+                           roughly 40% proper nouns, which would have measured
+                           entity co-occurrence clustering and reported it as
+                           semantic metric preservation. WordNet marks these with
+                           instance_hypernyms (Italy IS-AN-INSTANCE-OF country,
+                           as against dog IS-A mammal), so they are cheap to
+                           exclude.
+    """
     try:
         from nltk.corpus import wordnet as wn
         wn.synsets("test")
     except Exception as exc:                                   # noqa: BLE001
         return words, (f"MONOSEMOUS FILTER NOT APPLIED ({type(exc).__name__}). "
-                       "WordNet unavailable — the lexicon is sense-BLENDED and "
+                       "WordNet unavailable - the lexicon is sense-BLENDED and "
                        "F-METRIC run against it is invalid per v0.2 §2.")
-    kept = [w for w in words if len(wn.synsets(w)) == 1]
-    return kept, f"monosemous_wordnet: {len(kept)}/{len(words)} words retained"
+    kept, n_poly, n_pos, n_inst = [], 0, 0, 0
+    for w in words:
+        syns = wn.synsets(w)
+        if len(syns) != 1:
+            n_poly += 1
+            continue
+        s = syns[0]
+        if s.pos() != "n":
+            n_pos += 1
+            continue
+        if s.instance_hypernyms():
+            n_inst += 1
+            continue
+        kept.append(w)
+    return kept, (f"monosemous_common_noun_wordnet: {len(kept)}/{len(words)} kept "
+                  f"(dropped {n_poly} polysemous, {n_pos} non-noun, "
+                  f"{n_inst} proper-noun instances)")
 
 
 def load_glove(path: str, size_target: int = 500, min_rank: int = 200,

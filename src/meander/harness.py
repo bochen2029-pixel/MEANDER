@@ -138,6 +138,11 @@ def run(m: int = 4, n_lexicon: int | None = None, epochs: int = 3000,
     triples = falsifiers.make_triples(sem)
     coarse_triples = falsifiers.make_triples(
         sem, seed=4243, dist_rank=falsifiers.COARSE_DIST_RANK)
+    difficulty = falsifiers.triple_difficulty(sem, triples)
+    print(f"[B0] triple difficulty: positive d={difficulty['mean_positive_distance']:.4f} "
+          f"distractor d={difficulty['mean_distractor_distance']:.4f} "
+          f"gap={difficulty['mean_gap']:.4f} "
+          f"({difficulty['gap_over_positive_distance']:.1%} of positive distance)")
     ctx = {"harmonic_w": harmonic_w, "delta": 0.30, "jnd": jnd}
 
     results = []
@@ -193,6 +198,7 @@ def run(m: int = 4, n_lexicon: int | None = None, epochs: int = 3000,
                     "disambiguation": lex.disambiguation, "notes": lex.notes},
         "SYNTHETIC_NOT_A_RESULT": bool(lex.synthetic),
         "jnd": jnd,
+        "triple_difficulty": difficulty,
         "capacity": cap,
         "floors": floors,
         "disclosed_peeks": disclosed_peeks,
@@ -206,7 +212,7 @@ def run(m: int = 4, n_lexicon: int | None = None, epochs: int = 3000,
     tag = "synthetic" if lex.synthetic else "real"
     path = os.path.join(out_dir, f"b0_{tag}_m{m}_n{len(lex)}.json")
     with open(path, "w", encoding="utf-8") as fh:
-        json.dump(out, fh, indent=2)
+        json.dump(out, fh, indent=2, default=str)   # YAML dates in disclosed_peeks
     out["path"] = path
     print(f"[B0] wrote {path}  ({out['seconds']}s)")
     return out

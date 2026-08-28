@@ -40,14 +40,22 @@ lexicon:
     model:        "glove.6B.300d"        # or fastText cc.en.300; either is legal
     dim:          300
     provenance:   prior
-    status:       NOT_PRESENT_ON_DISK    # blocks a real B1 run; see harness output
+    status:       PRESENT                # downloaded 2026-08-27, ./data (gitignored)
+    source:       "https://nlp.stanford.edu/data/glove.6B.zip"
   disambiguation:
-    # v1 strategy: MONOSEMOUS FILTER. Keep only words with exactly one WordNet
-    # synset -> a static vector cannot sense-blend what has only one sense.
-    # Cheaper and stricter than sense-tagging a polysemous corpus; the cost is a
-    # smaller, slightly odd lexicon, which is an honest v1 limit, not a bug.
-    strategy:     monosemous_wordnet
+    # MONOSEMOUS COMMON-NOUN FILTER. Exactly one WordNet synset (a static vector
+    # cannot sense-blend what has one sense), AND pos == noun, AND not an
+    # instance. The last two conditions are load-bearing, not fastidiousness --
+    # see the `revisions` entry: filtering on synset count alone yielded a
+    # lexicon ~40% proper nouns and function words, which would have measured
+    # entity co-occurrence clustering and reported it as semantic metric
+    # preservation.
+    strategy:     monosemous_common_noun_wordnet
     provenance:   pinned_by_fiat
+    yield:        "1877/18350 in the rank window [200,20000); sampled to 500"
+    known_limit: >
+      A few pronoun-ish nouns ('someone', 'nobody') and abbreviations ('gmt',
+      'cia') survive. Stated as a v1 limit rather than filtered further.
     fallback:     "hand-curated sense-tagged subset if WordNet unavailable"
   size_target:    500           # "a few hundred" (v0.2 §9 B1)
   harness_only:
@@ -267,6 +275,36 @@ revisions:      # append-only. [{date, key, old, new, reason, peeked}]
       stand-in space; no real-E number existed, and none has been produced since.
       The old band is retained as `coarse_acc_diagnostic_only` so the vacuity is
       visible in every report rather than deleted from the record.
+    no_floor_was_moved: true
+
+  - date: 2026-08-27
+    key: lexicon.disambiguation.strategy
+    old: monosemous_wordnet (synset count only)
+    new: monosemous_common_noun_wordnet (+ pos==n, + no instance_hypernyms)
+    peeked: false
+    reason: >
+      Synset count alone is not sense-disambiguation for this test. The first
+      500-word draw from real GloVe was roughly 40% proper nouns ('italy',
+      'michael', 'malaysia', 'nigeria' - each has exactly one synset) plus
+      function words ('within', 'sometimes', 'mainly', 'non'). Neither is a
+      concept: proper-noun geometry encodes entity co-occurrence and function-word
+      geometry encodes syntactic distribution, so F-METRIC would have been
+      measuring a structure that is not the one §2 asks about, and any pass would
+      have been meaningless. Changed BEFORE any real-E falsifier number was read.
+    no_floor_was_moved: true
+
+  - date: 2026-08-27
+    key: nulls.optional.umap_2d_render
+    old: SKIPPED (umap-learn not installed)
+    new: RUNS (umap-learn installed 2026-08-27)
+    peeked: false
+    reason: >
+      Recorded because it CHANGED A VERDICT. At m=4 on real E, phi scores 0.729
+      and umap_2d_render scores 0.718 - it is the strongest null by a wide
+      margin. With umap absent the best null would have been roundtrip_only_phi
+      at 0.649, and phi would have shown a ~0.08 margin instead of 0.011: a
+      false positive produced purely by a missing baseline. This is M-NULL's
+      whole point ("a crippled null is a fake floor") caught in the act.
     no_floor_was_moved: true
 
   - date: 2026-08-27
