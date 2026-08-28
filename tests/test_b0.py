@@ -137,6 +137,32 @@ def test_f_degrade_separates_vagueness_from_error():
 
 # --------------------------------------------------------------- M-PIN
 
+def test_nulls_generalise_to_unseen_vectors():
+    """The 2-D nulls must project unseen words with their own transform().
+
+    Load-bearing for the held-out run. If a null falls back to 'nearest fitted
+    neighbour' it is crippled at exactly the moment it is supposed to be strong,
+    which hands phi a free win -- the fake floor M-NULL exists to prevent.
+    """
+    from meander import maps
+
+    rng = np.random.default_rng(11)
+    v = rng.normal(size=(120, 32)).astype(np.float32)
+    v /= np.linalg.norm(v, axis=1, keepdims=True)
+    train, test = v[:100], v[100:]
+
+    pca = maps.PCA2D().fit(train, 3, {})
+    z = pca.encode(test)
+    assert z.shape == (20, efd.n_free_params(3))
+    # A real projection gives distinct codes; the NN fallback would collapse
+    # unseen points onto fitted ones, so distinctness is the discriminator.
+    assert len(np.unique(np.round(z, 6), axis=0)) == len(z)
+    # and it must genuinely be the fitted PCA, not a refit on the test set
+    assert pca._model is not None
+    assert np.allclose(pca._model.transform(test),
+                       pca._embed_new(test), atol=1e-5)
+
+
 def test_lock_refuses_to_invent_a_threshold():
     lk = lock.load()
     assert lock.require(lk, "floors.f_metric_forcedchoice_min") == 0.75
