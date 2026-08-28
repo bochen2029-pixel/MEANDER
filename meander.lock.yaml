@@ -258,6 +258,53 @@ retracted:
   - "v0.1 A5 'resolution=precision' as free (now nested-loss-conditional)"
   - "v0.1 F-METRIC 'correlation beats random-phi'"
 
+# ---------------------------------------------------------------- prereg
+preregistrations:
+  - id: B1-EXT-1
+    declared: 2026-08-28
+    status: DECLARED_BEFORE_ANY_M_GT_10_RESULT_EXISTED
+    receipt: >
+      This block is committed in its own commit, containing no results, BEFORE
+      the run. The git history is the evidence that the bars below were fixed in
+      advance; if they had been chosen afterwards the ordering would show it.
+    motivation: >
+      The pre-registered B1 sweep FAILED (NO_OPERATING_POINT). The loss-weight
+      frontier then found `continuity_all_four` at m=10 clearing 5 of 6 floors,
+      missing only the margin bar and missing it by 0.012 - while phi's advantage
+      over the best null WIDENS with resolution (0.015 at m=3 -> 0.038 at m=10)
+      and the null itself stays flat (0.706 -> 0.715). Extending a sweep after
+      seeing a near miss is p-hacking if it is reported as confirmation. So it is
+      declared here as a SEPARATE test with its own id, run once, reported
+      whichever way it lands.
+    does_not_supersede: >
+      The original B1 verdict stands as FAIL whatever this returns. This does not
+      re-roll B1; it asks a new question - does the margin cross 0.05 at higher
+      resolution - and answers it once.
+    frozen_config:
+      map: phi_continuity_all_four
+      loss_weights: {roundtrip: 0.5, continuity: 3.0, separation: 0.5, nested: 0.5}
+      epochs: 3000
+      lexicon: "glove.6B.300d, monosemous_common_noun_wordnet, N=500"
+    m_values: [12, 14, 16, 20]
+    bars_unchanged:   # restated verbatim from `floors:` so they cannot drift
+      f_metric_forcedchoice_min:        0.75
+      f_metric_margin_over_best_null:   0.05
+      ci_disjoint_from_best_null:       required
+      f_metric_precision_at_5_min:      0.40
+      f_roundtrip_min_recovery:         0.90
+      f_collision_max_rate:             0.01
+    new_bar_pinned_now:
+      simple_contour_rate_min: 0.95
+      why: >
+        The specific way this extension could win dishonestly is by buying margin
+        with glyphs a hand cannot draw. Self-intersection already reaches 16% at
+        m=8 under uniform sampling and the legible region shrinks as m rises, so
+        a "pass" at m=20 could be purchased with undrawable contours - trading
+        the falsifier for the very thing the falsifier exists to protect. Pinned
+        before any m>10 result exists. 0.95 is just below the 0.984 the current
+        best config achieves, so it demands no regression and permits no collapse.
+    outcome: PENDING
+
 revisions:      # append-only. [{date, key, old, new, reason, peeked}]
   - date: 2026-08-27
     key: falsifiers.DIST_RANK (F-METRIC triple construction)
