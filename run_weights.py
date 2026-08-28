@@ -8,12 +8,25 @@ Declaring the language dead without sweeping it would repeat, at larger scale,
 the mistake that produced this session's premature "A5 is heading for
 retraction": mistaking one badly-chosen configuration for the shape of the thing.
 
-The decisive config is the first one. `continuity_only` = (0, 1, 0, 0) switches
-off every objective that competes with F-METRIC. Whatever it scores IS THE
-CEILING for this architecture and this carrier — no weighting can beat a config
-that optimises the target and nothing else. If the ceiling misses the floor, the
-question is closed, and the remaining configs only describe how the tradeoff
-bends on the way down.
+A PREDICTION THIS FILE MADE AND THE DATA REFUTED, kept here because the refutation
+is the useful part. The original argument was: `continuity_only` = (0, 1, 0, 0)
+switches off every objective competing with F-METRIC, so whatever it scores is
+THE CEILING — no weighting can beat a config optimising the target and nothing
+else. Measured, that is false:
+
+    m=3    continuity_only 0.705   continuity_all_four 0.721
+    m=10   continuity_only 0.747   continuity_all_four 0.753
+
+Switching the "competing" objectives back ON made F-METRIC BETTER. The argument
+was structurally wrong, not just numerically off. F-METRIC is a forced-choice
+DISCRIMINATION task: it requires the positive to be nearer than the distractor,
+which needs SEPARATION as much as continuity. The metric law and the identity
+law are not purely opposed here — this test consumes both, so a config that
+optimises correlation alone is not an upper bound on it. (`continuity_only` also
+scores round-trip 0.002, so it could never satisfy B1's conjunction anyway.)
+
+Corollary worth keeping: there is no cheap ceiling argument available. The loss
+surface has to be sampled, not reasoned about from which objectives "compete".
 
 PRE-REGISTRATION, unchanged from meander.lock and restated so it cannot drift:
 a rescue requires BOTH
@@ -43,6 +56,11 @@ def main():
     ap.add_argument("--epochs", type=int, default=3000)
     ap.add_argument("--threads", type=int, default=4,
                     help="CPU threads; kept well under core count on purpose")
+    ap.add_argument("--configs", nargs="*", default=None,
+                    help="restrict to named configs (B1-EXT-1 freezes one)")
+    ap.add_argument("--prereg", default=None,
+                    help="pre-registration id to stamp into the output")
+    ap.add_argument("--tag", default="b1_loss_weight_frontier")
     ap.add_argument("--out", default="results")
     args = ap.parse_args()
 
@@ -68,8 +86,22 @@ def main():
         ("b1_baseline",          (1.0, 1.0, 0.5, 0.5)),   # what B1 actually ran
     ]
 
+    if args.configs:
+        keep = set(args.configs)
+        unknown = keep - {n for n, _ in CONFIGS}
+        if unknown:
+            raise SystemExit(f"unknown config(s): {sorted(unknown)}")
+        CONFIGS = [(n, w) for n, w in CONFIGS if n in keep]
+
+    code_fp_at_start = lock_mod.code_fingerprint()   # before any work
     lk = lock_mod.load()
     floors = lk["floors"]
+    # Legibility floor, pinned in meander.lock preregistrations[B1-EXT-1]. A
+    # margin bought with contours a hand cannot draw is not a pass.
+    legibility_min = 0.95
+    for pr in lk.get("preregistrations") or []:
+        legibility_min = (pr.get("new_bar_pinned_now") or {}).get(
+            "simple_contour_rate_min", legibility_min)
     lk["lexicon"]["size_target"] = args.n
     lex = lex_mod.load(lk, data_dir="data")
     cfg = render.RenderConfig.from_lock(lk)
@@ -120,9 +152,14 @@ def main():
             acc, ci = fm["forced_choice_acc"], fm["ci95"]
             margin = acc - bn_acc
             disjoint = ci[0] > best_null["f_metric"]["ci95"][1]
+            legible = r["simple_contour_rate"] >= legibility_min
             rescue = (acc >= floors["f_metric_forcedchoice_min"]
                       and margin >= floors["f_metric_margin_over_best_null"]
-                      and disjoint)
+                      and disjoint
+                      and legible
+                      and r["f_metric"]["precision_at_5"] >= floors["f_metric_precision_at_5_min"]
+                      and (r["f_roundtrip"]["top1"] or 0) >= floors["f_roundtrip_min_recovery"]
+                      and r["f_collision"]["rate"] <= floors["f_collision_max_rate"])
             row = {
                 "m": m, "config": name, "weights": w, "capacity_bits": bits,
                 "acc": acc, "ci95": ci, "best_null": best_null["name"],
@@ -133,17 +170,23 @@ def main():
                 "simple_contour_rate": r["simple_contour_rate"],
                 "clears_absolute": acc >= floors["f_metric_forcedchoice_min"],
                 "clears_margin": margin >= floors["f_metric_margin_over_best_null"] and disjoint,
+                "clears_legibility": legible,
+                "legibility_min": legibility_min,
                 "RESCUE": rescue,
             }
             report.append(row)
             print(f"    {name:22s} 2AFC={acc:.3f} [{ci[0]:.3f},{ci[1]:.3f}] "
                   f"margin={margin:+.3f} P@5={fm['precision_at_5']:.3f} "
-                  f"rt={row['roundtrip']:.3f}  {'RESCUE' if rescue else 'fail'}")
+                  f"rt={row['roundtrip']:.3f} simple={r['simple_contour_rate']:.3f}"
+                  f"  {'RESCUE' if rescue else 'fail'}")
 
     ceiling = [r for r in report if r["config"] == "continuity_only"]
     out = {
         "rung": "B1-weights",
-        "code_fp": lock_mod.code_fingerprint(),
+        "prereg_id": args.prereg,
+        "legibility_min": legibility_min,
+        "code_fp": code_fp_at_start,
+        "code_fp_at_end": lock_mod.code_fingerprint(),
         "SYNTHETIC_NOT_A_RESULT": lex.synthetic,
         "floors_used": {k: floors[k] for k in
                         ("f_metric_forcedchoice_min", "f_metric_margin_over_best_null")},
@@ -153,7 +196,7 @@ def main():
         "rows": report,
     }
     os.makedirs(args.out, exist_ok=True)
-    path = os.path.join(args.out, "b1_loss_weight_frontier.json")
+    path = os.path.join(args.out, f"{args.tag}.json")
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=2, default=str)
 

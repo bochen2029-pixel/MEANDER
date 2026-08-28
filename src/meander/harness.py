@@ -103,6 +103,12 @@ def run(m: int = 4, n_lexicon: int | None = None, epochs: int = 3000,
         include_candidate: bool = True, out_dir: str = "results",
         lock_path: str | None = None, data_dir: str = "data") -> dict:
     t0 = time.time()
+    # Fingerprint the code NOW, not when the results are written. Stamping at
+    # the end records whatever happens to be on disk by then, which is a lie if
+    # anything was edited mid-run -- and mid-run edits happen. M-PIN says the
+    # version IS the fingerprint tuple; a result that cannot name the code that
+    # produced it is not evidence.
+    code_fp_at_start = lock_mod.code_fingerprint()
     lock = lock_mod.load(lock_path)
     disclosed_peeks = lock_mod.assert_no_peek(lock)
     for rev in disclosed_peeks:
@@ -190,7 +196,8 @@ def run(m: int = 4, n_lexicon: int | None = None, epochs: int = 3000,
         "schema": lock["schema"],
         "rung": "B0",
         "generated": time.strftime("%Y-%m-%dT%H:%M:%S"),
-        "code_fp": lock_mod.code_fingerprint(),
+        "code_fp": code_fp_at_start,
+        "code_fp_at_end": lock_mod.code_fingerprint(),   # differs => edited mid-run
         "m": m,
         "n_free_params": efd.n_free_params(m),
         "lexicon": {"source": lex.source, "n": len(lex), "dim": lex.dim,

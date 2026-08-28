@@ -1,0 +1,30 @@
+C:\Program Files\Python313\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+C:\Program Files\Python313\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+lexicon glove.6B.300d.txt  N=500  synthetic=False  threads=4/16
+
+====================== m = 3 ======================
+  setup 7s  capacity 4.70 bits  jnd 0.02048
+  best null: umap_2d_render 0.706 [0.69199375, 0.71975]
+    continuity_only        2AFC=0.705 [0.691,0.720] margin=-0.001 P@5=0.348 rt=0.002  fail
+    continuity_dominant    2AFC=0.709 [0.696,0.724] margin=+0.003 P@5=0.347 rt=1.000  fail
+    continuity_plus_sep    2AFC=0.709 [0.695,0.723] margin=+0.003 P@5=0.364 rt=1.000  fail
+    continuity_all_four    2AFC=0.721 [0.707,0.734] margin=+0.015 P@5=0.390 rt=1.000  fail
+    b1_baseline            2AFC=0.734 [0.720,0.749] margin=+0.028 P@5=0.398 rt=0.998  fail
+
+====================== m = 10 ======================
+  setup 9s  capacity 7.28 bits  jnd 0.02152
+  best null: umap_2d_render 0.715 [0.7015, 0.729]
+    continuity_only        2AFC=0.747 [0.734,0.760] margin=+0.032 P@5=0.393 rt=0.002  fail
+    continuity_dominant    2AFC=0.748 [0.734,0.761] margin=+0.033 P@5=0.398 rt=1.000  fail
+    continuity_plus_sep    2AFC=0.744 [0.730,0.757] margin=+0.029 P@5=0.388 rt=1.000  fail
+    continuity_all_four    2AFC=0.753 [0.740,0.766] margin=+0.038 P@5=0.413 rt=1.000  fail
+    b1_baseline            2AFC=0.716 [0.702,0.730] margin=+0.001 P@5=0.338 rt=1.000  fail
+
+========================================================
+ANY RESCUE: False
+CEILING (continuity-only, all competing objectives off): 0.747 vs floor 0.75
+  No loss weighting clears the pinned floors. The B1 verdict of
+  NO_OPERATING_POINT is not an artefact of one configuration.
+  -> results\b1_loss_weight_frontier.json

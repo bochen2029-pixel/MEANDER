@@ -101,15 +101,32 @@ class _Rank2Lift(ShapeMap):
         self.W = None
         self.b = None
         self._fit_vectors = None
+        self._model = None          # the fitted estimator, for out-of-sample
 
     def _embed(self, vectors):
         raise NotImplementedError
 
+    def _embed_new(self, vectors):
+        """Project unseen vectors. Uses the estimator's own transform() when it
+        has one, because a null that cannot generalise is a crippled null and
+        M-NULL forbids scoring against those. Falls back to the nearest fitted
+        neighbour only if no transform exists.
+        """
+        if self._model is not None and hasattr(self._model, "transform"):
+            try:
+                return np.asarray(self._model.transform(vectors), dtype=np.float32)
+            except Exception:                                      # noqa: BLE001
+                pass
+        sim = np.asarray(vectors, dtype=np.float32) @ self._fit_vectors.T
+        return self.z2_raw[np.argmax(sim, axis=1)]
+
     def fit(self, vectors, m, ctx):
         self.m = m
         p = efd.n_free_params(m)
-        z2 = np.asarray(self._embed(vectors), dtype=np.float32)
-        z2 = (z2 - z2.mean(0)) / (z2.std(0) + 1e-8)
+        raw = np.asarray(self._embed(vectors), dtype=np.float32)
+        self._mu, self._sd = raw.mean(0), raw.std(0) + 1e-8
+        z2 = (raw - self._mu) / self._sd
+        self.z2_raw = raw
         rng = np.random.default_rng(self.seed)
         W = rng.normal(size=(2, p)).astype(np.float32)
         W /= np.linalg.norm(W, axis=0, keepdims=True) + 1e-8
@@ -123,9 +140,8 @@ class _Rank2Lift(ShapeMap):
         v = np.asarray(vectors, dtype=np.float32)
         if len(v) == len(self._fit_vectors) and np.allclose(v, self._fit_vectors):
             z2 = self.z2
-        else:                                     # out-of-sample: nearest fitted
-            sim = v @ self._fit_vectors.T
-            z2 = self.z2[np.argmax(sim, axis=1)]
+        else:
+            z2 = (self._embed_new(v) - self._mu) / self._sd
         return np.tanh(z2 @ self.W + self.b) * self.scale + self.offset
 
 
@@ -135,7 +151,8 @@ class PCA2D(_Rank2Lift):
 
     def _embed(self, vectors):
         from sklearn.decomposition import PCA
-        return PCA(n_components=2, random_state=0).fit_transform(vectors)
+        self._model = PCA(n_components=2, random_state=0).fit(vectors)
+        return self._model.transform(vectors)
 
 
 class UMAP2D(_Rank2Lift):
@@ -152,7 +169,8 @@ class UMAP2D(_Rank2Lift):
 
     def _embed(self, vectors):
         import umap
-        return umap.UMAP(n_components=2, random_state=0).fit_transform(vectors)
+        self._model = umap.UMAP(n_components=2, random_state=0).fit(vectors)
+        return self._model.embedding_
 
 
 # --------------------------------------------------------------- discrete

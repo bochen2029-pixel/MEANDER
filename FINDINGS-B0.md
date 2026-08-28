@@ -187,13 +187,14 @@ everything else.
 
 ---
 
-## 5 · B1 is blocked, and on what
+## 5 · B1 is no longer blocked — it ran. See `FINDINGS-B1.md`
 
-**No embedding file exists on this machine** (looked for `glove.6B.300d.txt`,
-`crawl-300d-2M.vec`, `cc.en.300.vec` under `./data`). **NLTK/WordNet is also
-absent**, so the pinned `monosemous_wordnet` disambiguation cannot run — and
-[§2](MEANDER-SPEC-v0.2.md:67) is explicit that sense-blended vectors *corrupt the
-F-METRIC test itself*. Both are downloads and I have not made them.
+At the time of writing this page there was no embedding file and no WordNet on
+the machine, so B1 could not run. **Both were installed the same day and B1 ran
+on real E**; its results, the resolution frontier, the loss-weight frontier and
+the verdict live in [`FINDINGS-B1.md`](FINDINGS-B1.md). Everything in §1–§4 above
+is unaffected: the capacity, legibility and carrier measurements never touch a
+lexicon.
 
 Also still unmeasured: `noise.ink_sigma` and `noise.scan_sigma` remain
 `nominal_unmeasured` (measuring them needs a real pen and a real scanner), and
@@ -226,15 +227,22 @@ regression on the full received vector removes the leakage.
 
 ## 7 · Next
 
-1. **Unblock E** — GloVe or fastText, plus WordNet for the monosemous filter.
-   Both are downloads; they need a decision, not a keystroke.
-2. **Re-run B0 on real E**, then B1 at one frozen φ with the frontier.
-3. **Confirm or retract A5** — F-DEGRADE's 95% flip rate is the loudest signal
-   B0 produced and it goes to a named axiom.
-4. **Attack the carrier, not the ink** (§2). The capacity ceiling is structural:
-   dead even harmonics, a legibility region that shrinks with m, and an
-   analysis/synthesis mismatch that cannot be repaired without breaking
-   legibility. A different shape basis is worth costing before more φ tuning.
+1. ~~Unblock E~~ — **done.** GloVe 6B 300d + WordNet installed; 500 monosemous
+   common nouns. See [`FINDINGS-B1.md`](FINDINGS-B1.md).
+2. ~~Re-run on real E, then B1 with the frontier~~ — **done.** Verdict there.
+3. ~~Confirm or retract A5~~ — **A5 survived**; the retraction claim was withdrawn
+   (§4 above). The nested loss demonstrably beats the round-trip-only null.
+4. **Attack the carrier, not the ink** — still open, and now the main event. The
+   capacity ceiling is structural: dead even harmonics, a legibility region that
+   shrinks with m, and an analysis/synthesis mismatch that cannot be repaired
+   without breaking legibility. **This is where the remaining headroom is.** A
+   different shape basis should be costed against the same lexicon-free capacity
+   probe before any further φ tuning — that probe needs no embeddings and runs
+   in seconds.
+5. **Measure σ for real** — a pen, a scanner, and one afternoon would move
+   `noise` off `nominal_unmeasured` and re-enable F-COLLISION as a real bar.
+   Note B0's finding first, though: at nominal σ the channel is not noise-limited,
+   so this is about honesty rather than about recovering capacity.
 
 *Reproduce:*
 
