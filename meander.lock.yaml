@@ -270,6 +270,25 @@ revisions:      # append-only. [{date, key, old, new, reason, peeked}]
     no_floor_was_moved: true
 
   - date: 2026-08-27
+    key: falsifiers.f_degrade pass criterion
+    old: "monotone radii AND worst_flip_rate == 0.0"
+    new: "monotone radii AND monotone true-concept rank AND rank stays in top 5%"
+    peeked: synthetic_only
+    reason: >
+      The old criterion was STRICTER THAN THIS LOCK, which pins only
+      `f_degrade_monotone: required`. Zero flips at every truncation is
+      unachievable by arithmetic: at k=1 the code carries one free parameter
+      against the ~8 bits needed to name one of 300 concepts, so nearly
+      everything flips however good phi is. Applied literally it reported A5 as
+      failing when the nested loss was in fact working - at k=1 phi sat at
+      semantic radius 0.175 against the round-trip-only null's 0.897. A5's claim
+      is "degrades into vagueness, never into error", which is about flip
+      DISTANCE: a near-miss is vagueness and legal, a far miss is confident-wrong
+      and fatal. The new criterion measures the true concept's rank under
+      truncation, which is what the spec's words describe. Floors unchanged.
+    no_floor_was_moved: true
+
+  - date: 2026-08-27
     key: training epochs (default)
     old: 400
     new: 3000

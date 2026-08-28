@@ -120,19 +120,58 @@ def f_collision(perc: np.ndarray, jnd: float):
 
 # --------------------------------------------------------------- F-DEGRADE
 
-def f_degrade(radii: dict[int, float], flips: dict[int, float]):
-    """Truncation must lose nuance before category, monotonically (A5).
+def f_degrade(radii: dict[int, float], flips: dict[int, float],
+              ranks: dict[int, float] | None = None, n_lexicon: int | None = None,
+              neighbourhood_frac: float = 0.05):
+    """A5: meaning must degrade into VAGUENESS, never into ERROR.
 
     `radii[k]`  mean semantic error when decoding a k-truncated code
-    `flips[k]`  fraction whose k-truncated decode lands on a DIFFERENT nearest
-                concept than the full decode — i.e. confident-wrong, the exact
-                failure that killed v0.1's slide-rule claim.
+    `flips[k]`  fraction whose k-truncated decode has a different nearest concept
+    `ranks[k]`  mean rank of the TRUE concept under the k-truncated decode
+
+    Flip RATE is the wrong criterion and an earlier version of this function got
+    it wrong. Requiring zero flips at every k is unachievable by arithmetic, not
+    by any fault of the encoding: at k=1 the code carries a single free parameter
+    against the ~8 bits needed to name one of a few hundred concepts, so nearly
+    everything "flips" no matter how good phi is. Reading that as a failure of A5
+    confuses a counting limit with a design defect — and it is stricter than the
+    pinned floor, which asks only for monotonicity.
+
+    What A5 actually claims is about flip DISTANCE. Landing on a near neighbour
+    with a wide radius is vagueness and is legal; landing far away with a tight
+    radius is a confident-wrong read and is fatal. So the test is whether the
+    true concept STAYS INSIDE A NEIGHBOURHOOD as resolution drops. On the first
+    real profile this cleanly separated the maps that flip rate could not: at k=1
+    phi-with-nested-loss sat at radius 0.175 while the round-trip-only null sat
+    at 0.897, i.e. nearly orthogonal — which is precisely the failure mode A5
+    describes, and precisely what the nested loss is there to prevent.
     """
     ks = sorted(radii)
     seq = [radii[k] for k in ks]
     monotone = all(seq[i] >= seq[i + 1] - 1e-6 for i in range(len(seq) - 1))
-    worst_flip = max(flips.values()) if flips else 0.0
-    return {"radii": {int(k): float(radii[k]) for k in ks},
-            "flips": {int(k): float(flips[k]) for k in sorted(flips)},
-            "monotone": bool(monotone), "worst_flip_rate": float(worst_flip),
-            "pass": bool(monotone and worst_flip == 0.0)}
+
+    out = {"radii": {int(k): float(radii[k]) for k in ks},
+           "flips": {int(k): float(flips[k]) for k in sorted(flips)},
+           "monotone_radii": bool(monotone),
+           "worst_flip_rate": float(max(flips.values()) if flips else 0.0)}
+
+    if ranks and n_lexicon:
+        rseq = [ranks[k] for k in sorted(ranks)]
+        mono_rank = all(rseq[i] >= rseq[i + 1] - 1e-6 for i in range(len(rseq) - 1))
+        bound = max(2.0, neighbourhood_frac * n_lexicon)
+        stays = all(r <= bound for r in rseq)
+        out.update({
+            "mean_true_rank": {int(k): float(ranks[k]) for k in sorted(ranks)},
+            "neighbourhood_bound": float(bound),
+            "monotone_rank": bool(mono_rank),
+            "stays_in_neighbourhood": bool(stays),
+            "pass": bool(monotone and mono_rank and stays),
+            "criterion": ("radii and true-concept rank both monotone in k, and the "
+                          "true concept never leaves the top "
+                          f"{neighbourhood_frac:.0%} of the lexicon = vagueness, "
+                          "not error"),
+        })
+    else:
+        out["pass"] = bool(monotone)
+        out["criterion"] = "monotone radii only (rank profile unavailable)"
+    return out

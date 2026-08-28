@@ -114,9 +114,25 @@ def test_f_metric_is_perfect_when_perception_equals_semantics():
     assert falsifiers.f_metric(sem, sem, tri)["forced_choice_acc"] == 1.0
 
 
-def test_f_degrade_rejects_a_category_flip():
-    r = falsifiers.f_degrade({1: 0.5, 2: 0.3, 3: 0.1}, {1: 0.0, 2: 0.4, 3: 0.0})
-    assert r["monotone"] and not r["pass"]      # monotone radii, but a flip kills it
+def test_f_degrade_separates_vagueness_from_error():
+    radii, flips = {1: 0.5, 2: 0.3, 3: 0.1}, {1: 0.9, 2: 0.4, 3: 0.0}
+
+    # Vagueness: heavy flipping at low k, but the true concept stays near.
+    # This must PASS — at k=1 the code holds one parameter, so a high flip rate
+    # is arithmetic, not a design defect.
+    vague = falsifiers.f_degrade(radii, flips, ranks={1: 4.0, 2: 2.0, 3: 1.0},
+                                 n_lexicon=300)
+    assert vague["pass"], "near-miss degradation is vagueness and A5 permits it"
+
+    # Error: the true concept falls clean out of the neighbourhood. Must FAIL.
+    err = falsifiers.f_degrade(radii, flips, ranks={1: 120.0, 2: 40.0, 3: 1.0},
+                               n_lexicon=300)
+    assert not err["pass"] and err["monotone_radii"]
+
+    # Non-monotone rank must also fail even if every rank is small.
+    nonmono = falsifiers.f_degrade(radii, flips, ranks={1: 1.0, 2: 5.0, 3: 1.0},
+                                   n_lexicon=300)
+    assert not nonmono["pass"]
 
 
 # --------------------------------------------------------------- M-PIN

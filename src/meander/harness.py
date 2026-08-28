@@ -50,14 +50,20 @@ def _degrade(smap, vectors, m):
     z = smap.encode(vectors)
     full = smap.decode(z)
     full_nn = np.argmax(full @ vectors.T, axis=1)
-    radii, flips = {}, {}
+    n = len(vectors)
+    radii, flips, ranks = {}, {}, {}
     for k in range(1, m + 1):
         zt = np.array(z, copy=True)
         zt[:, efd.n_free_params(k):] = 0.0
         dec = smap.decode(zt)
         radii[k] = float(np.mean(1.0 - np.sum(dec * vectors, axis=1)))
-        flips[k] = float(np.mean(np.argmax(dec @ vectors.T, axis=1) != full_nn))
-    return falsifiers.f_degrade(radii, flips)
+        sim = dec @ vectors.T
+        flips[k] = float(np.mean(np.argmax(sim, axis=1) != full_nn))
+        # rank of the TRUE concept in the truncated decode: the vagueness-vs-error
+        # discriminator. Staying near = vagueness (legal); falling out = error.
+        true_sim = sim[np.arange(n), np.arange(n)][:, None]
+        ranks[k] = float(np.mean((sim > true_sim).sum(axis=1) + 1))
+    return falsifiers.f_degrade(radii, flips, ranks=ranks, n_lexicon=n)
 
 
 def evaluate_map(smap, vectors, m, cfg, noise, blur_px, jnd, sem, triples, ctx,

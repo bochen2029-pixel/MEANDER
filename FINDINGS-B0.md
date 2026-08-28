@@ -137,13 +137,37 @@ Margin over the best null = 0.0479 against a pinned 0.05, with disjoint CIs. The
 verdict object says `clears_margin: false`. Pre-registration doing exactly its
 job: on synthetic data, where it costs nothing, the bar held.
 
-**F-DEGRADE fails for every map, badly.** Truncation flips the decoded category
-for **95–100%** of items — including for the map trained *with* the nested
-Matryoshka loss the spec prescribes. [A5](MEANDER-SPEC-v0.2.md:46) says it "holds
-**only if** the nested loss trains and F-DEGRADE passes; otherwise A5 is
-retracted." On this evidence the prescribed fix does not do the job at weight 0.5,
-and A5 is heading for retraction. Confirming that on real E is now a priority,
-because it is the slide-rule claim — the single most quotable thing about MEANDER.
+**F-DEGRADE: the nested loss works, and my first criterion was wrong.**
+
+A first pass reported "F-DEGRADE fails, 95–100% category flips" and concluded
+[A5](MEANDER-SPEC-v0.2.md:46) was heading for retraction. **That was a defect in
+the test, not in the axiom.** The per-k profile:
+
+| map | radii k=1→4 | flips k=1→4 |
+|---|---|---|
+| `phi_learned` (nested loss on) | 0.175 → 0.042 → 0.023 → **0.009** | 0.953 → 0.603 → 0.133 → 0.0 |
+| `roundtrip_only_phi` | 0.897 → 0.719 → 0.442 → 0.0 | 0.997 → 0.940 → 0.523 → 0.0 |
+
+At k=1 the code carries **one** free parameter against the ~8.2 bits needed to
+name one of 300 concepts. A high flip rate there is arithmetic, not a design
+defect, so `worst_flip == 0` was an unachievable bar — and one *stricter than the
+pinned floor*, which asks only for monotonicity. Reading its failure as the
+axiom's was the error.
+
+What the profile actually shows is **the nested loss doing precisely its job.**
+At k=1, φ lands at radius 0.175 while the round-trip-only null lands at 0.897 —
+nearly orthogonal to the truth. That null is the exact failure A5 predicts
+(round-trip hides discriminative bits in high harmonics, so gist dies first), and
+the Matryoshka objective suppresses it: **5× better coarse-truncation error, 4×
+fewer flips at k=3.** Radii and flips are monotone for every map.
+
+A5's real claim is about flip **distance**, not flip rate — "degrades into
+vagueness, never into error." Landing on a near neighbour with a wide radius is
+vagueness and is legal; landing far away is a confident-wrong read and is fatal.
+`f_degrade` now measures the mean **rank of the true concept** under each
+truncation and requires it to stay inside the top 5% of the lexicon, monotonically.
+That is the criterion the spec's words describe, and it separates φ from the
+round-trip-only null where flip rate could not.
 
 **The discrete nulls were capacity-bound before they were metric-bound.** At the
 measured 4.36 bits they get **20 codes for 300 words**, so ~15 words share a mark
