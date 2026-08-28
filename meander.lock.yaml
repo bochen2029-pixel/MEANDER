@@ -321,7 +321,91 @@ preregistrations:
       declared: 2026-08-28
       declared_before_seeing: B1-EXT-1 results
 
-    outcome: PENDING
+    outcome:
+      verdict: NO_RESCUE
+      ran: 2026-08-28
+      artifact: results/b1_ext1_frontier.json
+      result_by_m:   # 2AFC / best-null / margin / precision@5 / simple-contour
+        m12: [0.743, 0.728, +0.015, 0.382, 0.922]
+        m14: [0.767, 0.719, +0.048, 0.409, 0.938]
+        m16: [0.758, 0.725, +0.033, 0.403, 0.812]
+        m20: [0.750, 0.728, +0.022, 0.414, 0.984]
+      reading: >
+        The hypothesis that motivated this extension - that the margin was
+        climbing with resolution and would cross 0.05 - is NOT SUPPORTED. Across
+        every resolution tested (m = 3, 10, 12, 14, 16, 20) the margin oscillates
+        in 0.015-0.048 and never reaches the bar. It does not trend; it plateaus.
+        Best point m=14: clears the absolute floor (0.767) and precision (0.409),
+        misses margin by 0.002 and legibility by 0.012.
+      legibility_bar_was_binding: >
+        The bar pinned before this run did the job it was pinned for. Simple
+        contour rates at m=12/14/16 are 0.922/0.938/0.812, all under 0.95. The
+        resolutions where phi scores best are the ones where the glyphs are least
+        drawable - exactly the "buy margin with undrawable glyphs" failure the
+        bar exists to catch. Without it, m=14 would have been reported as a
+        one-bar miss instead of a two-bar miss.
+      caveat_capacity_estimator: >
+        The capacity numbers at high m (15.89 at m=16, 15.00 at m=20) are
+        probably INFLATED and should not be quoted. `_bits_from_regression` fits
+        1+4(m-1) parameters - 61 at m=16, 77 at m=20 - against ~400 samples, so
+        residual variance is under-estimated. The non-monotonicity (m=16 > m=20)
+        is estimator noise, not physics. Re-measure with n_samples >> p before
+        using these.
+      artifact_fingerprint_untrustworthy: >
+        This run's code_fp was stamped at WRITE time by the pre-patch runner,
+        after src/meander/maps.py had been edited mid-run - the precise failure
+        that prompted the fingerprint-at-start fix. The numbers are sound (the
+        edit was in-sample-neutral) but the artifact cannot attest to its own
+        provenance. Reproduced under B1-EXT-1-REPRO with correct fingerprinting;
+        that is a reproduction of the same seeded config, NOT a second trial.
+
+  - id: B1-EXT-1-HOLDOUT
+    declared: 2026-08-28
+    status: RAN
+    outcome:
+      verdict: NO_PASS
+      artifact: results/b1_holdout.json
+      protocol: "fit on 400, F-METRIC scored on 100 unseen, bars unchanged"
+      phi_2afc: 0.706          # [0.674, 0.739]
+      best_null_2afc: 0.621    # umap_2d_render
+      margin: +0.085           # CLEARS the 0.05 bar that in-sample B1 failed
+      precision_at_5: 0.356    # misses 0.40
+      cleared: 3               # of 6
+      reading: >
+        The failure mode INVERTS. Held out, phi clears the margin bar it failed
+        in-sample (+0.085 vs +0.038) and misses the absolute floor it had cleared
+        (0.706 vs 0.753). Still a FAIL, on different bars.
+      rider_prediction_was_wrong: >
+        The rider argued in-sample scoring would flatter phi, a ~500k-parameter
+        network, relative to rank-2 projections. Measured, the NULLS fell further:
+        umap -0.094, pca -0.104, against phi's -0.047. phi generalises BETTER
+        than the 2-D squashes. UMAP is transductive, so its transform() on unseen
+        points is genuinely weaker than its fitted embedding, and it lost ground
+        even given that fair version rather than a nearest-neighbour stand-in.
+
+  - id: DIAG-SPLIT-M10
+    declared: 2026-08-28
+    status: RAN
+    kind: DIAGNOSTIC_NOT_A_PASS_TEST
+    outcome:
+      artifact: results/diag_split_m10.json
+      method: >
+        Score a 500-fitted and a 400-fitted phi on the SAME 100 test words and
+        the SAME triples, so task difficulty cancels and the residual gap is
+        generalisation alone.
+      generalisation_gap:   # seen-during-fit -> unseen-during-fit
+        phi_continuity_all_four: [0.744, 0.706, +0.037]
+        umap_2d_render:          [0.679, 0.621, +0.057]
+        roundtrip_only_phi:      [0.656, 0.598, +0.059]
+        pca_2d_render:           [0.600, 0.614, -0.014]
+      reading: >
+        Settles the confound the held-out run could not. The difficulty effect is
+        SMALL: phi scores 0.753 on the 500-word task and 0.744 on the 100-word
+        task with identical training, so only ~0.009 of the drop was "harder
+        test" and 0.037 is real generalisation loss. phi generalises better than
+        its strongest null (0.037 vs 0.057). And even the CONTAMINATED arm reaches
+        only 0.744 on this task - phi does not clear 0.75 under any condition
+        tested here.
 
 revisions:      # append-only. [{date, key, old, new, reason, peeked}]
   - date: 2026-08-27

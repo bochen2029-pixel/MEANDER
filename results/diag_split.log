@@ -1,0 +1,30 @@
+C:\Program Files\Python313\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+C:\Program Files\Python313\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+m=10  evaluation = the SAME 100 held-out words for both arms
+  band gap 0.1225 (16.9%), 800 triples
+  arm: seen-during-fit  (fitted on 500 words)
+    seen-during-fit      phi_continuity_all_four      2AFC=0.744 [0.714,0.772] P@5=0.462
+    seen-during-fit      roundtrip_only_phi           2AFC=0.656 [0.623,0.688] P@5=0.238
+    seen-during-fit      pca_2d_render                2AFC=0.600 [0.566,0.631] P@5=0.190
+    seen-during-fit      umap_2d_render               2AFC=0.679 [0.647,0.710] P@5=0.274
+    seen-during-fit      discrete_code_matched_bits   2AFC=0.555 [0.521,0.589] P@5=0.122
+    seen-during-fit      discrete_semantic_ordered    2AFC=0.568 [0.534,0.600] P@5=0.170
+  arm: unseen-during-fit  (fitted on 400 words)
+    unseen-during-fit    phi_continuity_all_four      2AFC=0.706 [0.674,0.739] P@5=0.356
+    unseen-during-fit    roundtrip_only_phi           2AFC=0.598 [0.564,0.631] P@5=0.256
+    unseen-during-fit    pca_2d_render                2AFC=0.614 [0.580,0.646] P@5=0.182
+    unseen-during-fit    umap_2d_render               2AFC=0.621 [0.588,0.654] P@5=0.244
+    unseen-during-fit    discrete_code_matched_bits   2AFC=0.603 [0.568,0.636] P@5=0.150
+    unseen-during-fit    discrete_semantic_ordered    2AFC=0.580 [0.545,0.614] P@5=0.182
+
+  GENERALISATION GAP (seen - unseen), difficulty held identical:
+    discrete_code_matched_bits   0.555 -> 0.603   gap -0.047
+    discrete_semantic_ordered    0.568 -> 0.580   gap -0.012
+    pca_2d_render                0.600 -> 0.614   gap -0.014
+    phi_continuity_all_four      0.744 -> 0.706   gap +0.037
+    roundtrip_only_phi           0.656 -> 0.598   gap +0.059
+    umap_2d_render               0.679 -> 0.621   gap +0.057
+
+  -> results\diag_split_m10.json

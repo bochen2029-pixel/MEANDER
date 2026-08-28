@@ -1,0 +1,145 @@
+{
+  "rung": "DIAGNOSTIC-not-a-pass-test",
+  "code_fp": "cca974ce539d0ba0",
+  "m": 10,
+  "split_seed": 20260828,
+  "difficulty": {
+    "mean_positive_distance": 0.7231892347335815,
+    "mean_distractor_distance": 0.8456640839576721,
+    "mean_gap": 0.1224747821688652,
+    "gap_over_positive_distance": 0.16935370862483978,
+    "frac_gap_negative": 0.0
+  },
+  "rows": [
+    {
+      "arm": "seen-during-fit",
+      "name": "phi_continuity_all_four",
+      "acc": 0.74375,
+      "ci95": [
+        0.71375,
+        0.7725
+      ],
+      "precision_at_5": 0.462
+    },
+    {
+      "arm": "seen-during-fit",
+      "name": "roundtrip_only_phi",
+      "acc": 0.65625,
+      "ci95": [
+        0.6225,
+        0.6875
+      ],
+      "precision_at_5": 0.23799999999999996
+    },
+    {
+      "arm": "seen-during-fit",
+      "name": "pca_2d_render",
+      "acc": 0.6,
+      "ci95": [
+        0.56625,
+        0.63125
+      ],
+      "precision_at_5": 0.18999999999999997
+    },
+    {
+      "arm": "seen-during-fit",
+      "name": "umap_2d_render",
+      "acc": 0.67875,
+      "ci95": [
+        0.6475,
+        0.71
+      ],
+      "precision_at_5": 0.27399999999999997
+    },
+    {
+      "arm": "seen-during-fit",
+      "name": "discrete_code_matched_bits",
+      "acc": 0.555,
+      "ci95": [
+        0.52125,
+        0.5887812499999998
+      ],
+      "precision_at_5": 0.12200000000000001
+    },
+    {
+      "arm": "seen-during-fit",
+      "name": "discrete_semantic_ordered",
+      "acc": 0.5675,
+      "ci95": [
+        0.53375,
+        0.6
+      ],
+      "precision_at_5": 0.16999999999999996
+    },
+    {
+      "arm": "unseen-during-fit",
+      "name": "phi_continuity_all_four",
+      "acc": 0.70625,
+      "ci95": [
+        0.67375,
+        0.73875
+      ],
+      "precision_at_5": 0.3559999999999999
+    },
+    {
+      "arm": "unseen-during-fit",
+      "name": "roundtrip_only_phi",
+      "acc": 0.5975,
+      "ci95": [
+        0.56375,
+        0.63125
+      ],
+      "precision_at_5": 0.256
+    },
+    {
+      "arm": "unseen-during-fit",
+      "name": "pca_2d_render",
+      "acc": 0.61375,
+      "ci95": [
+        0.58,
+        0.64625
+      ],
+      "precision_at_5": 0.18199999999999997
+    },
+    {
+      "arm": "unseen-during-fit",
+      "name": "umap_2d_render",
+      "acc": 0.62125,
+      "ci95": [
+        0.5875,
+        0.6537812499999999
+      ],
+      "precision_at_5": 0.244
+    },
+    {
+      "arm": "unseen-during-fit",
+      "name": "discrete_code_matched_bits",
+      "acc": 0.6025,
+      "ci95": [
+        0.5675,
+        0.63625
+      ],
+      "precision_at_5": 0.15
+    },
+    {
+      "arm": "unseen-during-fit",
+      "name": "discrete_semantic_ordered",
+      "acc": 0.58,
+      "ci95": [
+        0.545,
+        0.61375
+      ],
+      "precision_at_5": 0.182
+    }
+  ],
+  "generalisation_gap": {
+    "discrete_code_matched_bits": -0.04749999999999999,
+    "discrete_semantic_ordered": -0.012499999999999956,
+    "pca_2d_render": -0.01375000000000004,
+    "phi_continuity_all_four": 0.03749999999999998,
+    "roundtrip_only_phi": 0.05874999999999997,
+    "umap_2d_render": 0.057499999999999996
+  },
+  "cannot_produce_a_pass": true,
+  "note": "the seen-during-fit arm is the contaminated condition the pinned protocol forbids quoting; it exists only to hold task difficulty fixed so the gap is interpretable"
+}

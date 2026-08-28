@@ -4,3 +4,37 @@ C:\Program Files\Python313\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_
   warn(
 C:\Program Files\Python313\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
   warn(
+C:\Program Files\Python313\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+lexicon glove.6B.300d.txt  N=500  synthetic=False  threads=4/16
+
+====================== m = 12 ======================
+  setup 9s  capacity 8.17 bits  jnd 0.02015
+  best null: umap_2d_render 0.728 [0.71375, 0.742]
+    continuity_all_four    2AFC=0.743 [0.730,0.756] margin=+0.015 P@5=0.382 rt=1.000 simple=0.922  fail
+
+====================== m = 14 ======================
+  setup 13s  capacity 10.07 bits  jnd 0.02151
+  best null: umap_2d_render 0.719 [0.70574375, 0.73325]
+    continuity_all_four    2AFC=0.767 [0.754,0.780] margin=+0.048 P@5=0.409 rt=1.000 simple=0.938  fail
+
+====================== m = 16 ======================
+  setup 12s  capacity 15.89 bits  jnd 0.02182
+  best null: umap_2d_render 0.725 [0.71125, 0.73875]
+    continuity_all_four    2AFC=0.758 [0.746,0.772] margin=+0.033 P@5=0.403 rt=1.000 simple=0.812  fail
+
+====================== m = 20 ======================
+  setup 12s  capacity 15.00 bits  jnd 0.02269
+  best null: umap_2d_render 0.728 [0.714, 0.74175]
+    continuity_all_four    2AFC=0.750 [0.736,0.762] margin=+0.022 P@5=0.414 rt=1.000 simple=0.984  fail
+
+========================================================
+ANY RESCUE: False
+Traceback (most recent call last):
+  File "C:\MEANDER\run_weights.py", line 200, in <module>
+    with open(path, "w", encoding="utf-8") as fh:
+    ^^^^^^
+  File "C:\MEANDER\run_weights.py", line 191, in main
+    "floors_used": {k: floors[k] for k in
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported format string passed to NoneType.__format__

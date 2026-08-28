@@ -202,9 +202,12 @@ def main():
 
     print(f"\n{'=' * 56}")
     print(f"ANY RESCUE: {out['any_rescue']}")
-    print(f"CEILING (continuity-only, all competing objectives off): "
-          f"{out['ceiling_max_acc']:.3f} vs floor "
-          f"{floors['f_metric_forcedchoice_min']}")
+    if out["ceiling_max_acc"] is not None:
+        print(f"continuity-only arm: {out['ceiling_max_acc']:.3f} vs floor "
+              f"{floors['f_metric_forcedchoice_min']} "
+              f"(NB: not an upper bound - see module docstring)")
+    else:
+        print("continuity-only arm: not run in this invocation")
     if not out["any_rescue"]:
         print("  No loss weighting clears the pinned floors. The B1 verdict of")
         print("  NO_OPERATING_POINT is not an artefact of one configuration.")

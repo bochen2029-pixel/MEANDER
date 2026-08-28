@@ -152,11 +152,70 @@ to beat a 2-D squash by a margin worth the machinery.
 
 ## 5 · Open at the time of writing
 
-- **B1-EXT-1** — pre-registered extension to m ∈ {12, 14, 16, 20}, config frozen
-  to `continuity_all_four`, bars unchanged, plus a **legibility floor of 0.95**
-  pinned in advance because the specific way this could win dishonestly is by
-  buying margin with glyphs a hand cannot draw. Declared in `meander.lock`
-  `preregistrations` and committed *alone, containing no data*, before the run.
+## 5b · B1-EXT-1 — RAN. `NO_RESCUE`, and the trend hypothesis is refuted
+
+Pre-registered extension to m ∈ {12, 14, 16, 20}, config frozen to
+`continuity_all_four`, bars unchanged, plus a **legibility floor of 0.95** pinned
+in advance. Declared in `meander.lock` and committed *alone, containing no data*,
+before the run — the commit ordering is the receipt.
+
+| m | 2AFC | best null | margin | P@5 | simple contours | abs | marg | leg |
+|---|---|---|---|---|---|---|---|---|
+| 12 | 0.743 | 0.728 | +0.015 | 0.382 | 0.922 | · | · | · |
+| **14** | **0.767** | 0.719 | **+0.048** | 0.409 | 0.938 | ✅ | · | · |
+| 16 | 0.758 | 0.725 | +0.033 | 0.403 | 0.812 | ✅ | · | · |
+| 20 | 0.750 | 0.728 | +0.022 | 0.414 | 0.984 | · | · | ✅ |
+
+**The hypothesis that motivated the extension is refuted.** The margin was
+supposed to be climbing toward 0.05. Across every resolution now tested — m = 3,
+10, 12, 14, 16, 20 — it reads **+0.015, +0.038, +0.015, +0.048, +0.033, +0.022**.
+It does not trend. It plateaus in a 0.015–0.048 band and never reaches the bar.
+
+**The legibility bar was binding, and that is the point of having pinned it.**
+Simple-contour rates at m=12/14/16 are 0.922 / 0.938 / 0.812 — all under 0.95.
+**The resolutions where φ scores best are the ones where the glyphs are least
+drawable.** That is precisely the "buy margin with undrawable glyphs" failure the
+bar was written to catch; without it, m=14 would have been reported as a
+one-bar miss rather than a two-bar miss.
+
+Two caveats recorded rather than buried:
+
+- **The high-m capacity numbers are probably inflated and should not be quoted.**
+  15.89 bits at m=16 and 15.00 at m=20, against 7.28 at m=10. The estimator fits
+  1+4(m−1) parameters — 61 at m=16, 77 at m=20 — against ~400 samples, so
+  residual variance is under-estimated. The non-monotonicity (m=16 > m=20) is
+  estimator noise, not physics.
+- **This run's artifact cannot attest to its own provenance.** Its `code_fp` was
+  stamped at *write* time by the pre-patch runner, after `maps.py` had been
+  edited mid-run — the exact failure that prompted the fingerprint-at-start fix.
+  The numbers are sound (the edit was in-sample-neutral), but the record is
+  weaker than it should be. Reproduced under `B1-EXT-1-REPRO` with correct
+  fingerprinting; that is a reproduction of the same seeded config, not a second
+  trial.
+
+## 5c · The generalisation diagnostic — settles the confound
+
+`diag_split.py` scores a 500-fitted and a 400-fitted φ on the **same** 100 test
+words and the **same** triples, so difficulty cancels and the residual is
+generalisation alone. It cannot produce a pass — it deliberately runs the
+contaminated arm — and no bar moved.
+
+| map | fitted on 500 | fitted on 400 | gap |
+|---|---|---|---|
+| **φ continuity_all_four** | 0.744 | **0.706** | **+0.037** |
+| umap_2d_render | 0.679 | 0.621 | +0.057 |
+| roundtrip_only_phi | 0.656 | 0.598 | +0.059 |
+| pca_2d_render | 0.600 | 0.614 | −0.014 |
+
+Three readings:
+
+1. **The difficulty confound was small.** φ scores 0.753 on the 500-word task and
+   0.744 on the 100-word task with identical training — only ~0.009 of the earlier
+   drop was "harder test". The real generalisation loss is **0.037**.
+2. **φ generalises better than its strongest null** (0.037 against umap's 0.057),
+   confirming the held-out result under controlled difficulty.
+3. **Even the contaminated arm reaches only 0.744.** φ does not clear 0.75 on this
+   task under *any* condition tested — trained on the test words included.
 ## 5a · The held-out check — RUN, and it inverts the failure mode
 
 Every number in §1–§2 is **in-sample**: φ trained on all 500 words and F-METRIC
@@ -194,7 +253,68 @@ mixes memorisation with a harder test and **these numbers cannot separate them.*
 construction. It cannot produce a pass — it deliberately runs the contaminated
 arm the protocol forbids quoting — and it leaves every bar untouched.
 
-## 6 · Standing limits
+## 6 · What B1 actually establishes
+
+Six independent tests now agree, and they agree on something more specific than
+"it failed":
+
+**φ works. It just doesn't work *enough*.**
+
+The learned map is not a null result. It beats every strong baseline the spec
+names — round-trip-only, PCA-2D, UMAP-2D, and both discrete codebooks — at every
+resolution above m=2. The advantage **survives held-out testing** (+0.085 on
+unseen words, larger than in-sample) and **survives difficulty control** (0.037
+generalisation gap against umap's 0.057). It round-trips at 1.000 and collides at
+~0. Something real is being learned, and it generalises better than a 2-D squash.
+
+But its **absolute discriminability sits at 0.70–0.77 in every condition tested**
+— in-sample, held out, difficulty-controlled, across ten resolutions and five
+loss weightings — and the pinned floor is 0.75. MEANDER straddles its own bar. It
+is not refuted as *"φ does nothing"*; it is refuted as *"φ does enough to read"*.
+
+Three structural facts explain why, and all three were measured before any of
+this was known:
+
+1. **The carrier is small.** ~4–7 bits per glyph against §6's ~15 prior, and the
+   channel is not noise-limited — at nominal σ, ink and scanner cost 0.15 bits
+   out of 6.02. The bits are lost inside the representation.
+2. **Legibility fights resolution.** The drawable region shrinks as m rises, and
+   the resolutions where φ scores best are the ones where the glyphs are least
+   drawable. This is a third Pareto axis §6 never costed.
+3. **A 2-D projection is nearly as good.** UMAP-2D scores ~0.62–0.73 everywhere.
+   φ with 37–77 free parameters beats it, but only by 0.02–0.09. Most of what a
+   perceptual metric can read off a closed contour, two dimensions already carry.
+
+The spec anticipated this outcome and wrote the disposal in advance
+([§7](MEANDER-SPEC-v0.2.md:161)): *"No operating point ⇒ the language claim dies
+honestly; a machine-readable analog lexicon may still survive at a stated
+capacity."* That is exactly where B1 lands. The survival path is real — φ
+round-trips, separates, and generalises — but it is thin, because
+[§8](MEANDER-SPEC-v0.2.md:170)'s razor cuts backward on it: a machine that
+already holds the embedding gains nothing from a lossier re-encode of it.
+
+## 7 · What v0.3 should record
+
+- **A2 (bi-Lipschitz) — half validated.** The *separation* lower bound is
+  comfortably achievable (collision ~0 at every m ≥ 3). The *continuity* upper
+  bound is where it fails. v0.2 called separation "the expensive half"; measured,
+  it was the cheap half.
+- **A5 (resolution) — survives.** The nested loss demonstrably beats the
+  round-trip-only null on coarse-truncation error (0.175 vs 0.897). The earlier
+  retraction was withdrawn.
+- **§6 bit budget — revise down**, with the caveat that high-m estimates are
+  estimator-strained and need re-measuring at n ≫ p.
+- **New constraint, unnamed in v0.2: LEGIBILITY.** The drawable region is a small
+  subset of coefficient space that *shrinks with resolution*. It belongs in the
+  axioms, not in a footnote — it bound the outcome here.
+- **F-METRIC — the bar was right and MEANDER failed it.** No case for moving it.
+  The margin requirement in particular did the work it was pinned for: without
+  it, the in-sample run would have read as a pass.
+- **M-NULL — vindicated hardest of all.** Installing one absent baseline
+  (umap-learn, thirty seconds) took φ's apparent margin from 0.08 to 0.011. Every
+  null the spec names must be present before any margin is believed.
+
+## 8 · Standing limits
 
 - The perceptual metric is a **low-pass-L2 proxy**, not a human eye. Per the
   lock's `disabled_laws`, results license the machine-readable claim only.
