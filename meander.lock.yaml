@@ -351,6 +351,28 @@ preregistrations:
         residual variance is under-estimated. The non-monotonicity (m=16 > m=20)
         is estimator noise, not physics. Re-measure with n_samples >> p before
         using these.
+      measurement_precision: >
+        RUN-TO-RUN NONDETERMINISM IS ~±0.004 2AFC, and it matters here. The
+        reproduction (B1-EXT-1-REPRO, same seeds, same config, 6 threads instead
+        of 4) returned 2AFC deltas of +0.0002 / -0.0035 / 0.0000 / +0.0035 at
+        m=12/14/16/20 - almost certainly float reduction order varying with
+        thread count. Consequence: "m=14 misses the margin by 0.002" is
+        OVER-PRECISE. Its margin reads 0.0475 and 0.0440 across two runs, so the
+        distance to the 0.05 bar is smaller than the instrument's noise. The
+        legibility figure is worse in this respect - a proportion over only 64
+        contours, SE ~0.030, so 0.938 is also within noise of its 0.95 bar.
+        HONEST STATEMENT: m=14 sits AT both bars, inside measurement precision.
+        Neither run cleared either, and the pinned protocol was one run per m, so
+        the FAIL stands - but no claim should be made to three decimals.
+        Resolving m=14 properly needs a NEW pre-registered test: n repeated runs,
+        report the distribution, decide against the unchanged bars. Also raise
+        the simple-contour sample from 64 to the full lexicon; it is cheap.
+      reproduction_confirms_the_edit_was_harmless: >
+        The original ran pre-edit maps.py while its fingerprint named the
+        post-edit code. The reproduction ran the post-edit code and returned
+        numbers differing only at the nondeterminism scale, which empirically
+        confirms the edit was in-sample-neutral rather than leaving it as an
+        assertion.
       artifact_fingerprint_untrustworthy: >
         This run's code_fp was stamped at WRITE time by the pre-patch runner,
         after src/meander/maps.py had been edited mid-run - the precise failure

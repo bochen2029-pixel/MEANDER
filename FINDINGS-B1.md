@@ -178,7 +178,38 @@ drawable.** That is precisely the "buy margin with undrawable glyphs" failure th
 bar was written to catch; without it, m=14 would have been reported as a
 one-bar miss rather than a two-bar miss.
 
-Two caveats recorded rather than buried:
+### The reproduction, and a precision correction
+
+`B1-EXT-1-REPRO` re-ran the same seeded config with corrected fingerprinting
+(6 threads instead of 4). 2AFC deltas at m=12/14/16/20: **+0.0002, −0.0035,
+0.0000, +0.0035.**
+
+Two readings, and the second forces a correction to §5b above.
+
+**The mid-run edit was harmless, now shown rather than asserted.** The original
+ran pre-edit `maps.py` while its fingerprint named the post-edit code. The
+reproduction ran the post-edit code and differs only at noise scale.
+
+**Run-to-run nondeterminism is ~±0.004** — almost certainly float reduction order
+varying with thread count. So **"m=14 misses the margin by 0.002" is
+over-precise.** That margin reads 0.0475 and 0.0440 across the two runs: the
+distance to the bar is *smaller than the instrument's noise*. The legibility
+number is worse in this respect — a proportion over only 64 contours, SE ≈ 0.030,
+so 0.938 is also within noise of its 0.95 bar.
+
+**Honest statement: m=14 sits AT both bars, inside measurement precision.**
+Neither run cleared either, and the pinned protocol was one run per m, so the
+FAIL stands — but no claim here should be made to three decimals. Resolving m=14
+properly requires a *new* pre-registered test: n repeated runs, report the
+distribution, decide against unchanged bars. The simple-contour sample should
+also be raised from 64 to the full lexicon; it is cheap and there is no reason
+for that estimate to be the noisiest number in the report.
+
+This does not disturb the headline. The margin **plateaus** across
+m = 3…20 and the plateau sits below the bar; one resolution sitting at it within
+noise is not a trend crossing it.
+
+Two further caveats recorded rather than buried:
 
 - **The high-m capacity numbers are probably inflated and should not be quoted.**
   15.89 bits at m=16 and 15.00 at m=20, against 7.28 at m=10. The estimator fits

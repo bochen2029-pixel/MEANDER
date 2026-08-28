@@ -1,0 +1,133 @@
+{
+  "rung": "B1-weights",
+  "prereg_id": "B1-EXT-1-REPRO",
+  "legibility_min": 0.95,
+  "code_fp": "cca974ce539d0ba0",
+  "code_fp_at_end": "cca974ce539d0ba0",
+  "SYNTHETIC_NOT_A_RESULT": false,
+  "floors_used": {
+    "f_metric_forcedchoice_min": 0.75,
+    "f_metric_margin_over_best_null": 0.05
+  },
+  "any_rescue": false,
+  "ceiling_configs": [],
+  "ceiling_max_acc": null,
+  "rows": [
+    {
+      "m": 12,
+      "config": "continuity_all_four",
+      "weights": [
+        0.5,
+        3.0,
+        0.5,
+        0.5
+      ],
+      "capacity_bits": 8.166504021221138,
+      "acc": 0.74325,
+      "ci95": [
+        0.73,
+        0.75700625
+      ],
+      "best_null": "umap_2d_render",
+      "best_null_acc": 0.72775,
+      "margin": 0.015499999999999958,
+      "ci_disjoint": false,
+      "precision_at_5": 0.3836,
+      "collision": 1.6032064128256513e-05,
+      "roundtrip": 1.0,
+      "simple_contour_rate": 0.921875,
+      "clears_absolute": false,
+      "clears_margin": false,
+      "clears_legibility": false,
+      "legibility_min": 0.95,
+      "RESCUE": false
+    },
+    {
+      "m": 14,
+      "config": "continuity_all_four",
+      "weights": [
+        0.5,
+        3.0,
+        0.5,
+        0.5
+      ],
+      "capacity_bits": 10.068567125753477,
+      "acc": 0.76325,
+      "ci95": [
+        0.7505,
+        0.77625
+      ],
+      "best_null": "umap_2d_render",
+      "best_null_acc": 0.71925,
+      "margin": 0.04400000000000004,
+      "ci_disjoint": true,
+      "precision_at_5": 0.40920000000000006,
+      "collision": 1.6032064128256513e-05,
+      "roundtrip": 1.0,
+      "simple_contour_rate": 0.9375,
+      "clears_absolute": true,
+      "clears_margin": false,
+      "clears_legibility": false,
+      "legibility_min": 0.95,
+      "RESCUE": false
+    },
+    {
+      "m": 16,
+      "config": "continuity_all_four",
+      "weights": [
+        0.5,
+        3.0,
+        0.5,
+        0.5
+      ],
+      "capacity_bits": 15.894961434285944,
+      "acc": 0.75825,
+      "ci95": [
+        0.74525,
+        0.77150625
+      ],
+      "best_null": "umap_2d_render",
+      "best_null_acc": 0.725,
+      "margin": 0.03325,
+      "ci_disjoint": true,
+      "precision_at_5": 0.4036,
+      "collision": 1.6032064128256513e-05,
+      "roundtrip": 1.0,
+      "simple_contour_rate": 0.8125,
+      "clears_absolute": true,
+      "clears_margin": false,
+      "clears_legibility": false,
+      "legibility_min": 0.95,
+      "RESCUE": false
+    },
+    {
+      "m": 20,
+      "config": "continuity_all_four",
+      "weights": [
+        0.5,
+        3.0,
+        0.5,
+        0.5
+      ],
+      "capacity_bits": 15,
+      "acc": 0.753,
+      "ci95": [
+        0.73925,
+        0.766
+      ],
+      "best_null": "umap_2d_render",
+      "best_null_acc": 0.72775,
+      "margin": 0.025249999999999995,
+      "ci_disjoint": false,
+      "precision_at_5": 0.4164,
+      "collision": 3.2064128256513025e-05,
+      "roundtrip": 1.0,
+      "simple_contour_rate": 0.984375,
+      "clears_absolute": true,
+      "clears_margin": false,
+      "clears_legibility": true,
+      "legibility_min": 0.95,
+      "RESCUE": false
+    }
+  ]
+}
