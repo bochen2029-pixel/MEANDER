@@ -1,0 +1,118 @@
+{
+  "rung": "B1-EXT-1-HOLDOUT",
+  "code_fp": "cca974ce539d0ba0",
+  "code_fp_at_end": "cca974ce539d0ba0",
+  "SYNTHETIC_NOT_A_RESULT": false,
+  "protocol": "fit on 400 train words, F-METRIC scored on 100 held-out words, bars unchanged",
+  "split_seed": 20260828,
+  "config": "continuity_all_four",
+  "held_out_triple_difficulty": {
+    "mean_positive_distance": 0.7231892347335815,
+    "mean_distractor_distance": 0.8456640839576721,
+    "mean_gap": 0.1224747821688652,
+    "gap_over_positive_distance": 0.16935370862483978,
+    "frac_gap_negative": 0.0
+  },
+  "legibility_min": 0.95,
+  "any_pass": false,
+  "rows": [
+    {
+      "m": 10,
+      "name": "roundtrip_only_phi",
+      "kind": "null",
+      "acc": 0.5975,
+      "ci95": [
+        0.56375,
+        0.63125
+      ],
+      "precision_at_5": 0.256,
+      "collision": 0.0,
+      "roundtrip": 0.63,
+      "simple_contour_rate": 0.484375
+    },
+    {
+      "m": 10,
+      "name": "pca_2d_render",
+      "kind": "null",
+      "acc": 0.61375,
+      "ci95": [
+        0.58,
+        0.64625
+      ],
+      "precision_at_5": 0.18199999999999997,
+      "collision": 0.00202020202020202,
+      "roundtrip": null,
+      "simple_contour_rate": 0.640625
+    },
+    {
+      "m": 10,
+      "name": "umap_2d_render",
+      "kind": "null",
+      "acc": 0.62125,
+      "ci95": [
+        0.5875,
+        0.6537812499999999
+      ],
+      "precision_at_5": 0.244,
+      "collision": 0.0038383838383838384,
+      "roundtrip": null,
+      "simple_contour_rate": 0.609375
+    },
+    {
+      "m": 10,
+      "name": "discrete_code_matched_bits",
+      "kind": "null",
+      "acc": 0.6025,
+      "ci95": [
+        0.5675,
+        0.63625
+      ],
+      "precision_at_5": 0.15,
+      "collision": 0.006868686868686869,
+      "roundtrip": 0.61,
+      "simple_contour_rate": 0.609375
+    },
+    {
+      "m": 10,
+      "name": "discrete_semantic_ordered",
+      "kind": "null",
+      "acc": 0.58,
+      "ci95": [
+        0.545,
+        0.61375
+      ],
+      "precision_at_5": 0.182,
+      "collision": 0.02,
+      "roundtrip": 0.61,
+      "simple_contour_rate": 1.0
+    },
+    {
+      "m": 10,
+      "name": "phi_continuity_all_four",
+      "kind": "candidate",
+      "acc": 0.70625,
+      "ci95": [
+        0.67375,
+        0.73875
+      ],
+      "precision_at_5": 0.3559999999999999,
+      "collision": 0.0,
+      "roundtrip": 0.88,
+      "simple_contour_rate": 0.96875,
+      "best_null": "umap_2d_render",
+      "best_null_acc": 0.62125,
+      "margin": 0.08500000000000008,
+      "ci_disjoint": true,
+      "checks": {
+        "f_metric_absolute": false,
+        "f_metric_margin": true,
+        "f_metric_precision": false,
+        "f_collision": true,
+        "f_roundtrip": false,
+        "legibility": true
+      },
+      "n_cleared": 3,
+      "PASS": false
+    }
+  ]
+}

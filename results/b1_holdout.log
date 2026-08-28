@@ -1,0 +1,16 @@
+C:\Program Files\Python313\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+lexicon glove.6B.300d.txt N=500  train=400 test=100  seed=20260828  threads=4
+held-out triple difficulty: gap=0.1225 (16.9% of positive distance), 800 triples
+
+====================== m = 10 ======================
+  setup 10s  capacity 7.28 bits
+    null roundtrip_only_phi           2AFC=0.598
+    null pca_2d_render                2AFC=0.614
+    null umap_2d_render               2AFC=0.621
+    null discrete_code_matched_bits   2AFC=0.603
+    null discrete_semantic_ordered    2AFC=0.580
+    CAND phi_continuity_all_four      2AFC=0.706 [0.674,0.739] margin=+0.085 P@5=0.356 -> 3/6 FAIL
+
+ANY PASS (held-out): False
+  -> results\b1_holdout.json
