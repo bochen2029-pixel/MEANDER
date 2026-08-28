@@ -157,14 +157,42 @@ to beat a 2-D squash by a margin worth the machinery.
   pinned in advance because the specific way this could win dishonestly is by
   buying margin with glyphs a hand cannot draw. Declared in `meander.lock`
   `preregistrations` and committed *alone, containing no data*, before the run.
-- **The held-out check** — and this is the significant caveat on everything
-  above. **Every number in this document is in-sample:** φ is trained on all 500
-  words and F-METRIC is then measured on those same 500. v0.1 §7 asked for
-  held-out concepts; this implementation did not do it. The bias is asymmetric —
-  φ is a ~500k-parameter network, PCA and UMAP are rank-2 projections, so
-  in-sample scoring flatters φ specifically. That is why it does **not** weaken
-  the FAIL (φ lost while holding the advantage) but would make any pass unsafe.
-  Declared as a rider on B1-EXT-1 while that run was still executing.
+## 5a · The held-out check — RUN, and it inverts the failure mode
+
+Every number in §1–§2 is **in-sample**: φ trained on all 500 words and F-METRIC
+measured on those same 500. v0.1 §7 asked for held-out concepts and this
+implementation did not do it. Declared as a rider on B1-EXT-1 *while that run was
+still executing*, then run: fit φ and every null on 400 words, score F-METRIC on
+the 100 unseen, bars unchanged.
+
+| | in-sample (500) | held-out (100 unseen) |
+|---|---|---|
+| φ 2AFC | 0.753 | **0.706** [0.674, 0.739] |
+| best null (umap-2D) | 0.715 | **0.621** |
+| **margin** | +0.038 ❌ | **+0.085 ✅** |
+| precision@5 | 0.413 ✅ | 0.356 ❌ |
+| absolute floor 0.75 | ✅ | ❌ |
+| band gap (task difficulty) | 25.0% | 16.9% |
+
+**The margin bar — the one B1 failed — clears on unseen words**, +0.085 against a
+required 0.05. Verdict still **FAIL** (3 of 6), but on different bars.
+
+**The predicted bias ran backwards.** The rider argued in-sample scoring would
+flatter φ, a ~500k-parameter network, relative to rank-2 projections. Measured,
+the nulls fell *further*: umap −0.094, pca −0.104, against φ's −0.047. φ
+generalises **better** than the 2-D squashes. UMAP is transductive — its
+`transform()` on unseen points is a genuinely weaker object than its fitted
+embedding — and it lost ground even given the fair version rather than a
+nearest-neighbour stand-in.
+
+**One confound blocks a clean reading, and it is not small.** Triples drawn from
+100 words sit closer together than triples from 500: band gap 16.9% against
+25.0%. The held-out task is simply harder for everyone, so φ's absolute drop
+mixes memorisation with a harder test and **these numbers cannot separate them.**
+`diag_split.py` isolates it by scoring a 500-fitted and a 400-fitted φ on the
+*same* 100 test words and the *same* triples, holding difficulty fixed by
+construction. It cannot produce a pass — it deliberately runs the contaminated
+arm the protocol forbids quoting — and it leaves every bar untouched.
 
 ## 6 · Standing limits
 
